@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Submitted Abstracts</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=IBM+Plex+Mono:wght@500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F6F3EC;
+    --paper-raised:#FFFDF9;
+    --ink:#1E2230;
+    --ink-soft:#5B5F6E;
+    --rule:#DCD5C4;
+    --accent:#5C6F4D;      /* moss */
+    --accent-soft:#E6EADD;
+    --plum:#6E4C6B;        /* secondary accent for poster/type */
+    --plum-soft:#EFE3EE;
+    --amber:#A9722C;       /* status accent */
+    --amber-soft:#F3E5D0;
+    --focus:#2F5FB3;
+    --shadow: 0 1px 2px rgba(30,34,48,0.06), 0 4px 14px rgba(30,34,48,0.05);
+  }
+
+  *{box-sizing:border-box;}
+  html{-webkit-font-smoothing:antialiased;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Inter', system-ui, sans-serif;
+    line-height:1.5;
+  }
+
+  a{color:inherit;}
+
+  .wrap{
+    max-width:900px;
+    margin:0 auto;
+    padding:56px 24px 120px;
+  }
+
+  header.page{
+    margin-bottom:36px;
+    border-bottom:1px solid var(--rule);
+    padding-bottom:28px;
+  }
+
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--accent);
+    margin:0 0 10px;
+  }
+
+  h1{
+    font-family:'Source Serif 4', serif;
+    font-weight:700;
+    font-size:clamp(32px, 5vw, 44px);
+    margin:0 0 8px;
+    letter-spacing:-0.01em;
+  }
+
+  .page-sub{
+    color:var(--ink-soft);
+    font-size:15px;
+    margin:0;
+  }
+
+  /* ---- controls ---- */
+  .controls{
+    position:sticky;
+    top:0;
+    z-index:20;
+    background:var(--paper);
+    padding:18px 0 16px;
+    border-bottom:1px solid var(--rule);
+    margin-bottom:22px;
+  }
+
+  .search-row{
+    display:flex;
+    gap:10px;
+    margin-bottom:12px;
+  }
+
+  .search-row input[type="search"]{
+    flex:1;
+    font-family:'Inter', sans-serif;
+    font-size:15px;
+    padding:11px 14px;
+    border:1px solid var(--rule);
+    border-radius:8px;
+    background:var(--paper-raised);
+    color:var(--ink);
+  }
+  .search-row input[type="search"]:focus{
+    outline:2px solid var(--focus);
+    outline-offset:1px;
+  }
+
+  .filters{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    align-items:center;
+  }
+
+  .filters select{
+    font-family:'Inter', sans-serif;
+    font-size:13px;
+    padding:8px 30px 8px 12px;
+    border:1px solid var(--rule);
+    border-radius:20px;
+    background:var(--paper-raised) url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="10" height="6"><path d="M1 1l4 4 4-4" stroke="%235B5F6E" stroke-width="1.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>') no-repeat right 12px center;
+    -webkit-appearance:none;
+    appearance:none;
+    color:var(--ink);
+    cursor:pointer;
+  }
+  .filters select:focus{ outline:2px solid var(--focus); outline-offset:1px; }
+
+  .clear-btn{
+    font-family:'Inter', sans-serif;
+    font-size:13px;
+    color:var(--ink-soft);
+    background:none;
+    border:1px solid transparent;
+    padding:8px 10px;
+    cursor:pointer;
+    text-decoration:underline;
+  }
+  .clear-btn:hover{ color:var(--ink); }
+
+  .result-count{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    color:var(--ink-soft);
+    margin:14px 2px 18px;
+  }
+
+  /* ---- cards ---- */
+  .card-list{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+  }
+
+  .card{
+    background:var(--paper-raised);
+    border:1px solid var(--rule);
+    border-radius:10px;
+    box-shadow:var(--shadow);
+    overflow:hidden;
+  }
+
+  .card-head{
+    display:flex;
+    align-items:flex-start;
+    gap:14px;
+    padding:18px 20px;
+    cursor:pointer;
+    text-align:left;
+    width:100%;
+    background:none;
+    border:none;
+    font:inherit;
+    color:inherit;
+  }
+  .card-head:focus-visible{
+    outline:2px solid var(--focus);
+    outline-offset:-2px;
+  }
+
+  .toggle-icon{
+    flex:0 0 auto;
+    width:22px;
+    height:22px;
+    margin-top:2px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:50%;
+    background:var(--accent-soft);
+    color:var(--accent);
+    transition:transform .2s ease, background .2s ease;
+    font-size:11px;
+  }
+  .card.open .toggle-icon{
+    transform:rotate(90deg);
+  }
+
+  .card-main{
+    flex:1 1 auto;
+    min-width:0;
+  }
+
+  .card-num{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    color:var(--ink-soft);
+    letter-spacing:.05em;
+  }
+
+  .card-title{
+    font-family:'Source Serif 4', serif;
+    font-weight:600;
+    font-size:18px;
+    line-height:1.32;
+    margin:3px 0 6px;
+  }
+
+  .card-meta{
+    font-size:13.5px;
+    color:var(--ink-soft);
+    margin:0;
+  }
+  .card-meta .presenter-name{
+    color:var(--ink);
+    font-weight:600;
+  }
+
+  .tags{
+    flex:0 0 auto;
+    display:flex;
+    flex-direction:column;
+    align-items:flex-end;
+    gap:6px;
+    padding-top:2px;
+  }
+
+  .tag{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:10.5px;
+    letter-spacing:.04em;
+    text-transform:uppercase;
+    padding:3px 9px;
+    border-radius:20px;
+    white-space:nowrap;
+  }
+  .tag-sex{ background:#EDEDED; color:#4B4B4B; }
+  .tag-sex.female{ background:var(--plum-soft); color:var(--plum); }
+  .tag-sex.male{ background:#DDE6F0; color:#2F5FB3; }
+
+  .tag-type{ background:var(--accent-soft); color:var(--accent); }
+  .tag-status{ background:var(--amber-soft); color:var(--amber); }
+
+  .tag-decision{ background:#E5EEF5; color:#2F5FB3; font-weight:600; }
+  .tag-decision.decision-poster{ background:var(--plum-soft); color:var(--plum); }
+  .tag-decision.decision-discuss{ background:#F0EBDD; color:#8A6D1F; }
+
+  .abstract{
+    display:grid;
+    grid-template-rows:0fr;
+    transition:grid-template-rows .25s ease;
+  }
+  .card.open .abstract{
+    grid-template-rows:1fr;
+  }
+  .abstract-inner{
+    overflow:hidden;
+  }
+  .abstract-body{
+    padding:0 20px 20px 56px;
+    border-top:1px solid var(--rule);
+    margin-top:2px;
+    padding-top:14px;
+  }
+  .abstract-body p{
+    margin:0 0 10px;
+    font-size:14.5px;
+    color:var(--ink);
+    max-width:68ch;
+  }
+  .abstract-body .extra-meta{
+    font-size:12.5px;
+    color:var(--ink-soft);
+    margin-top:12px;
+  }
+  .abstract-body .extra-meta span{
+    display:inline-block;
+    margin-right:14px;
+  }
+
+  .empty-state{
+    text-align:center;
+    padding:60px 20px;
+    color:var(--ink-soft);
+    font-family:'Source Serif 4', serif;
+    font-size:17px;
+    border:1px dashed var(--rule);
+    border-radius:10px;
+  }
+
+  footer.page{
+    margin-top:48px;
+    padding-top:20px;
+    border-top:1px solid var(--rule);
+    font-size:12.5px;
+    color:var(--ink-soft);
+    font-family:'IBM Plex Mono', monospace;
+  }
+
+  @media (max-width:560px){
+    .card-head{ flex-wrap:wrap; }
+    .tags{ flex-direction:row; align-items:center; width:100%; padding-left:36px; }
+    .abstract-body{ padding-left:20px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <header class="page">
+    <p class="eyebrow">Conference Abstract Review</p>
+    <h1>Submitted Abstracts</h1>
+    <p class="page-sub">Browse, search and filter submitted abstracts. Click a card to read the full abstract.</p>
+  </header>
+
+  <div class="controls">
+    <div class="search-row">
+      <input type="search" id="searchInput" placeholder="Search by title, presenter, affiliation or abstract text…" aria-label="Search abstracts">
+    </div>
+    <div class="filters" id="filters">
+      <select id="filterSex" aria-label="Filter by sex">
+        <option value="">Sex — All</option>
+      </select>
+      <select id="filterType" aria-label="Filter by presentation requested">
+        <option value="">Requested — All</option>
+      </select>
+      <select id="filterStatus" aria-label="Filter by employment">
+        <option value="">Employment — All</option>
+      </select>
+      <select id="filterCountry" aria-label="Filter by country">
+        <option value="">Country — All</option>
+      </select>
+      <select id="filterDeadline" aria-label="Filter by submission round">
+        <option value="">Deadline — All</option>
+      </select>
+      <select id="filterDecision" aria-label="Filter by decision">
+        <option value="">Decision — All</option>
+      </select>
+      <button class="clear-btn" id="clearFilters">Clear filters</button>
+    </div>
+  </div>
+
+  <p class="result-count" id="resultCount"></p>
+
+  <div class="card-list" id="cardList"></div>
+
+  <div class="empty-state" id="emptyState" style="display:none;">No abstracts match your search.</div>
+
+  <footer class="page">Conference abstract review · <span id="totalCount"></span> submissions loaded</footer>
+
+</div>
+
+<script>
+// __ABSTRACT_DATA__
+const ABSTRACTS = [{"Title": "A CHOLESTEROL-DRIVEN COMPOSITIONAL CROSSOVER TUNES THE PHYSICAL STATE OF PHASE-SEPARATED LIPID MEMBRANES", "Presenter": "Loredana CASALIS", "Sex": "Female", "Presenter Affiliation": "Università degli Studi di Trieste, Physics Department", "Presenter Country": "Italy", "Presenter Email": "", "Presentation Requested": "Oral", "Employment": "Unknown", "Abstract": "Because lipid rafts regulate the spatial organization of receptors, signalling complexes, and membrane trafficking, understanding their cholesterol-dependent physical basis is increasingly important, particularly as altered plasma-membrane cholesterol organization is implicated in cancer progression. Here, we investigate supported lipid bilayers composed of a biomimetic quaternary mixture (DOPC/DPPC/SM/cholesterol) containing 7–33 mol% cholesterol. By combining AFM imaging, force spectroscopy, FRAP, calorimetry, and neutron spin-echo spectroscopy, we resolve membrane structure, mechanics, and dynamics across multiple length and time scales. We identify a compositional crossover near 25 mol% cholesterol that separates two distinct physical regimes. Below this threshold, the membrane exhibits strong phase separation, characterized by a large thickness mismatch, high line tension, pronounced mechanical contrast, and slow diffusion within liquid-ordered domains. Above the crossover, the thickness mismatch decreases rapidly, while the structural, mechanical, and dynamical contrast between liquid-ordered (Lo) and liquid-disordered (Ld) phases progressively collapses. AFM force spectroscopy reveals a convergence of rupture forces between the Lo and Ld phases, whereas FRAP measurements show increased molecular mobility within ordered domains, consistent with reduced interfacial constraints.", "Deadline": "Round 2", "Decision": "Discuss"}, {"Title": "A DUAL STRATEGY COMBINING SPECTRAL SHIFT SCREENING AND COARSE-GRAINED MOLECULAR DYNAMICS FOR A2AR", "Presenter": "Kerstin Kanonenberg", "Sex": "Female", "Presenter Affiliation": "Eurofins CALIXAR", "Presenter Country": "France", "Presenter Email": "", "Presentation Requested": "", "Employment": "Unknown", "Abstract": "The Adenosine A2A Receptor (A2AR) was selected as a representative GPCR to establish an integrated fragment-based discovery workflow capable of screening fragments on the active receptor state. This workflow combines Spectral Shift screening, coarse-grained Martini 3 molecular dynamics (MD) simulations and computational chemistry to efficiently identify and validate fragment hits. Using this approach, we discovered several fragment binders that were subsequently confirmed using thermal shift and cellular assays, providing mechanistic insight into both receptor flexibility and fragment interaction patterns. Spectral Shift technology played a central role by enabling fragment screening directly on active GPCR while maintaining native protein conformation, offering higher throughput and dramatically lower protein consumption than traditional biophysical approaches such as NMR, or SPR. In parallel, unbiased coarse-grained MD simulations captured long-timescale receptor dynamics and rapidly revealed potential fragment-binding hotspots.", "Deadline": "Round 2", "Decision": "Poster"}, {"Title": "A KEYSTONE INTERACTION IN THE ASSEMBLY OF THE TYPE VI SECRETION SYSTEM MEMBRANE COMPLEX IN B. FRAGILIS", "Presenter": "Ahmed HAYDA", "Sex": "Male", "Presenter Affiliation": "Laboratoire de Chimie Bactérienne (LCB)", "Presenter Country": "France", "Presenter Email": "edurand@imm.cnrs.fr", "Presentation Requested": "Oral or poster", "Employment": "PhD student", "Abstract": "The Type VI Secretion System (T6SS) is a bacterial nanomachine essential for interbacterial competition through secretion of antagonistic effectors into the target. This nanomachine requires a specialized membrane complex (MC) to anchor the machinery to the cell envelope, and allow the passage of the \"poisoned harpoon\" through the double membrane.", "Deadline": "Round 1", "Decision": "Oral"}, {"Title": "A MEMBRANE-DISRUPTIVE ACTION OF VBIT-4 CHALLENGES ITS ROLE AS A WIDELY USED VDAC OLIGOMERIZATION INHIBITOR", "Presenter": "Varun Ravishankar", "Sex": "Male", "Presenter Affiliation": "Laboratoire d'Ingénierie des Systèmes Macromoléculaires, CNRS, UMR 7255 - Aix Marseille Université", "Presenter Country": "France", "Presenter Email": "", "Presentation Requested": "Poster", "Employment": "Unknown", "Abstract": "The voltage-dependent anion channel (VDAC) is the most abundant protein of the mitochondrial outer membrane and plays a central role in metabolism and apoptosis. Its oligomerization has been proposed to mediate critical processes, including mtDNA release and apoptotic signaling. The small molecule VBIT-4 has been widely used over the past decade as an inhibitor of VDAC1 oligomerization, yet its molecular mechanisms remain poorly defined.", "Deadline": "Round 1", "Decision": "Poster"}, {"Title": "ADSORPTION OF LIPID BILAYERS TO MONOLAYERS - A NEW TRIPLE LAYER SYSTEM FOR STUDYING MEMBRANE PROTEINS", "Presenter": "Christian SCHWIEGER", "Sex": "Male", "Presenter Affiliation": "Martin Luther University Halle-Wittenberg, Institute of chemistry", "Presenter Country": "Germany", "Presenter Email": "Christian.schwieger@chemie.uni-halle.de", "Presentation Requested": "Oral", "Employment": "Unknown", "Abstract": "Lipid monolayers can be used as very simple model system for one membrane leaflet. They have the advantages of being perfectly oriented, completely hydrated, and accessible through the aqueous phase. We are exploring methods to assemble lipid bilayers underneath lipid monolayers at the air-water interface. The bilayers will be oriented, allowing to deduce molecular orientations from experiments, while still being in a well-hydrated and natural environment. We will present successful attempts in constructing such a model system, i.e., the adsorption of different lipid nanodiscs or vesicles to lipid monolayer at the air-water interface.", "Deadline": "Round 1", "Decision": "Oral"}, {"Title": "ANTIBODIES COUPLED TO LIPOPHILIC DYES ENABLE HIGH-DENSITY MEMBRANE LABELING IN SUPER-RESOLUTION AND EXPANSION MICROSCOPY", "Presenter": "Manuel ROJO", "Sex": "Male", "Presenter Affiliation": "Institut de Biochimie et Génétique Cellulaires (IBGC), UMR 5095 CNRS – Université de Bordeaux", "Presenter Country": "France", "Presenter Email": "manuel.rojo@ibgc.cnrs.fr", "Presentation Requested": "Oral or poster", "Employment": "Unknown", "Abstract": "Classical immunolabelling approaches can achieve homogeneous and continuous labeling of cellular membranes and organelles at wide-field and confocal resolution. In super-resolution and expansion microscopy, however, the lack of high-density labels hampers the localization of membrane proteins and protein complexes within their membrane context. We show that secondary antibodies coupled to lipophilic dyes ATTO 647N or ATTO 550 brightly label the nuclear envelope, mitochondria, and endoplasmic reticulum of fixed, permeabilized cells, and that graded labeling intensities allow selective visualization of organelles.", "Deadline": "Round 2", "Decision": "Discuss"}, {"Title": "BIOMIMETIC LIPID MEMBRANES AS TEMPLATES FOR STRUCTURING INORGANIC SILICA", "Presenter": "Lucien ROACH", "Sex": "Male", "Presenter Affiliation": "ENS de Lyon, CNRS, LCH, UMR 5182", "Presenter Country": "France", "Presenter Email": "lucien.roach@ens-lyon.fr", "Presentation Requested": "Poster", "Employment": "PhD student", "Abstract": "Diatoms are single-celled algae, ubiquitous in marine environments, notably they have an exterior cell composed of intricately structured silica (frustule). The control and reproducibility of the hierarchical structuration seen in diatom frustules far exceeds the current abilities of material sciences. Throughout frustule formation, the frustule remains in close contact with lipid membranes, with recent research suggesting that the membrane is an active participant in generating silica structuration. To address this gap, we have developed biomimetic lipid systems in which we use the formation of liquid-ordered (Lo) and liquid-disordered (Ld) domains to direct site-specific silica condensation.", "Deadline": "Round 2", "Decision": "Poster"}, {"Title": "CAPTURING THE DESENSITIZED CONFORMATION OF THE MUSCLE-TYPE NICOTINIC ACETYLCHOLINE RECEPTOR", "Presenter": "Manuela ZOONENS", "Sex": "Female", "Presenter Affiliation": "Université Paris Cité, CNRS, Biochimie des Protéines Membranaires", "Presenter Country": "France", "Presenter Email": "manuela.zoonens@ibpc.fr", "Presentation Requested": "Oral", "Employment": "Unknown", "Abstract": "The nicotinic acetylcholine receptor (nAChR) from electric fish is a key model for understanding ligand-gated ion channel (pLGIC) function. Upon neurotransmitter binding, these receptors undergo successive conformational transitions from resting (closed-channel) to active (open-channel), and then desensitized (closed-channel) states. Recent structural data have clarified the coupling between agonist-induced changes in the extracellular domain (ECD) and motions of the pore-lining M2 a-helices in the transmembrane domain (TMD). However, agonist-bound Torpedo nAChR structures revealed lipid densities in the central pore, likely artefacts from reconstitution in protein-based nanodiscs.", "Deadline": "Round 1", "Decision": "Discuss"}, {"Title": "CELL DIVISION PROTEINS OF ARCHAEA", "Presenter": "Maria HOERNKE", "Sex": "Female", "Presenter Affiliation": "Martin-Luther-Universität, Physical Chemistry", "Presenter Country": "Germany", "Presenter Email": "Maria.Hoernke@chemie.uni-halle.de", "Presentation Requested": "Poster", "Employment": "Unknown", "Abstract": "Archaea have developed an entirely different way of constructing their membranes compared to bacteria and eukarya, able to withstand harsh conditions (temperatures, salt, pH). Apart from general membrane behavior, we study the membrane binding of the cell division protein SepF and its binding partners. Archaeal lipid monolayers are examined by surface-sensitive infrared spectroscopy to yield mechanistic information.", "Deadline": "Round 2", "Decision": "Poster"}, {"Title": "CELL SURFACE TARGETING BY GAG-BINDING PEPTIDES", "Presenter": "Johannes MURRE", "Sex": "Male", "Presenter Affiliation": "Sorbonne Université, CPCV", "Presenter Country": "France", "Presenter Email": "", "Presentation Requested": "Poster", "Employment": "Unknown", "Abstract": "Cell-Penetrating Peptides (CPPs) are short peptides that can enter cells by spontaneously crossing the plasma membrane, either by endocytosis or direct translocation through the lipid bilayer. Several natural CPPs correspond to the third helix of a highly conserved domain of homeoproteins, the so-called homeodomain. A GAG-binding sequence is found upstream of the CPP sequence in homeodomains, with different GAG specificity depending on the homeoprotein.", "Deadline": "Round 1", "Decision": "Poster"}, {"Title": "CELLULAR INSERTION OF MEMBRANE PROTEINS FOR THEIR STRUCTURAL ANALYSIS USING NMR SPECTROSCOPY", "Presenter": "Noé IMLER", "Sex": "Male", "Presenter Affiliation": "Molecular Microbiology and Structural Biochemistry (MMSB), UMR 5086 CNRS-Université de Lyon", "Presenter Country": "France", "Presenter Email": "noe.imler@ibcp.fr", "Presentation Requested": "Oral or poster", "Employment": "PhD student", "Abstract": "Solid-state NMR allows the study of insoluble proteins as membrane proteins. These membrane proteins are generally studied in a lipid native-like environment. One problem that remains today is how to study them directly in cells, to identify the impact of partner proteins and structural modifications induced by the cellular environment.", "Deadline": "Round 2", "Decision": "Discuss"}, {"Title": "CHAIN-SPECIFIC LIPID DYNAMICS REVEAL AN ASYMMETRIC SKIN BARRIER MATRIX", "Presenter": "Oskar ENGBERG", "Sex": "Male", "Presenter Affiliation": "Institute of Medical Physics and Biophysics, Leipzig University", "Presenter Country": "Germany", "Presenter Email": "oskar.engberg@medizin.uni-leipzig.de", "Presentation Requested": "Oral", "Employment": "Post-doc", "Abstract": "The skin barrier, the stratum corneum is the body’s first line of defence against dehydration and environmental exposure. Its exceptional barrier function is usually attributed to a dense, low-permeability lipid matrix of approximately equimolar ceramides, free fatty acids, and cholesterol, which appears ordered and largely crystalline by X-ray diffraction.", "Deadline": "Round 1", "Decision": "Oral"}, {"Title": "CHANNEL PROTEINS DRIVE MICELLAR INTERACTIONS WITH THE BACTERIAL OUTER MEMBRANE", "Presenter": "Amar Krishna GOPINATH", "Sex": "Male", "Presenter Affiliation": "Department of Chemical Engineering, Indian Institute of Science", "Presenter Country": "India", "Presenter Email": "ayappa@iisc.ac.in", "Presentation Requested": "Oral or poster", "Employment": "PhD student", "Abstract": "Recent studies report the abundance of integral membrane proteins in the outer membrane of Gram-negative bacteria, challenging the conventional lipid-centric models of membrane organization. This revised understanding of the architecture of the bacterial membrane necessitates a re-examination of how antimicrobial molecules interact with them and eventually permeate this complex biological barrier.", "Deadline": "Round 2", "Decision": "Discuss"}, {"Title": "CHARACTERIZATION OF THE PSEUDOPALIN TRANSPORT PATHWAY VIA CNTI AND MEXB IN PSEUDOMONAS AERUGINOSA", "Presenter": "Quentin CECE", "Sex": "Male", "Presenter Affiliation": "Faculté de Pharmacie de Paris", "Presenter Country": "France", "Presenter Email": "quentin.cece@cnrs.fr", "Presentation Requested": "Poster", "Employment": "PhD student", "Abstract": "Metallostasis plays a major role in living systems. It is particularly relevant for pathogen bacteria at microorganism-host interface where \"nutritional immunity\" is displayed. In metal scarce conditions, a common bacterial strategy consists in the biosynthesis of metallophores, their export into the extracellular medium, and the recovery of a metal metallophore complex through dedicated membrane transporters.", "Deadline": "Round 1", "Decision": "Poster"}, {"Title": "CHARGE-DEPENDENT INSERTION OF THE ANTIMICROBIAL PEPTIDE MAGAININ-2 INTO LIPID MONOLAYERS", "Presenter": "Sophie COMBET", "Sex": "Female", "Presenter Affiliation": "Laboratoire Léon-Brillouin (LLB), UMR12 CEA, CNRS, Université Paris-Saclay", "Presenter Country": "France", "Presenter Email": "sophie.combet@cnrs.fr", "Presentation Requested": "Oral", "Employment": "Unknown", "Abstract": "Many antimicrobial peptides act by disrupting cellular membranes, with therapeutic selectivity arising from their ability to discriminate between bacterial and mammalian cells, a distinction largely governed by membrane surface charge. Here, we investigate the interfacial organisation and membrane insertion of the cationic antimicrobial peptide magainin 2 using specular neutron reflectometry on lipid monolayers that mimic bacterial and mammalian membranes.", "Deadline": "Round 1", "Decision": "Discuss"}, {"Title": "CHOLESTEROL OXIDATION ALTERS CRITICAL ALLOSTERIC INTERACTIONS BETWEEN GLYCINE TRANSPORTER 2 AND MEMBRANE CHOLESTEROL", "Presenter": "Ada QUINN", "Sex": "Female", "Presenter Affiliation": "Australian Institute for Bioengineering and Nanotechnology, University of Queensland", "Presenter Country": "Australia", "Presenter Email": "m.omara@uq.edu.au", "Presentation Requested": "Oral or poster", "Employment": "Post-doc", "Abstract": "Neurotransmitter transporters such as Glycine transporter 2 (GlyT2) are important pharmaceutical targets that are exquisitely sensitive to membrane cholesterol. Membrane cholesterol binds to GlyT2 at the membrane embedded CHOL1 site, modulating conformational cycling, substrate uptake, and the affinity of analgesic allosteric inhibitors. Buildup of oxidized cholesterol species is a hallmark of neurodegenerative disease, altering membrane biophysical properties.", "Deadline": "Round 2", "Decision": "Discuss"}, {"Title": "COMPARISON OF LIPID DROPLET BINDING PROPERTIES OF TWO EXCHANGABLE PERILIPINS, PERILIPIN 3 AND PERILIPIN 4", "Presenter": "Alenka ČOPIČ", "Sex": "Female", "Presenter Affiliation": "Centre de Recherche en Biologie Cellulaire de Montpellier-CRBM, Université de Montpellier, CNRS", "Presenter Country": "France", "Presenter Email": "alenka.copic@crbm.cnrs.fr", "Presentation Requested": "Oral", "Employment": "Post-doc", "Abstract": "Lipid droplets (LDs) are organelles dedicated to lipid storage, composed of a neutral lipid core surrounded by a phospholipid monolayer with embedded proteins. Perilipins (PLINs) are highly abundant LD-proteins, with five PLINs present in mammals. In a cell, different PLINs often do not bind to the same population of LDs, demonstrating differences in their LD-binding properties.", "Deadline": "Round 1", "Decision": "Oral"}, {"Title": "CONFORMATIONAL NANO-SWITCH FOR FUNCTIONAL MULTIPLEXING BY CELL-SIGNALING RECEPTORS", "Presenter": "Raju REGMI", "Sex": "Male", "Presenter Affiliation": "Curie Institute, PSL University, Sorbonne University, CNRS UMR168", "Presenter Country": "France", "Presenter Email": "raju.regmi@curie.fr", "Presentation Requested": "Oral", "Employment": "Unknown", "Abstract": "A central challenge in biology is determining how some receptors generate multiple, and sometimes even opposite, signals in cells. Here, we investigate the origin of multi-signaling features prevalent in life sciences with focus on nanoscale conformational switches triggered by Fas receptor-ligand interactions.", "Deadline": "Round 1", "Decision": "Oral"}, {"Title": "CONSTANT-pH MOLECULAR DYNAMICS OF BIOLOGICAL LIPIDS", "Presenter": "Paolo ROSSETTI", "Sex": "Male", "Presenter Affiliation": "Computational Biology, Department of Biology, Friedrich-Alexander-Universität Erlangen-Nürnberg", "Presenter Country": "Germany", "Presenter Email": "paolo.rossetti@fau.de", "Presentation Requested": "Oral", "Employment": "PhD student", "Abstract": "Negatively charged phospholipids are ubiquitous membrane components playing important roles in signalling pathways, by regulating cell apoptosis, cell replication, immune evasion in cancer cells and stress responses in plants. Importantly, lipids protonation is sensitive to different electrostatic stimuli (i.e., pH, ion concentration, membrane environment, interactions with proteins or other biomolecules).", "Deadline": "Round 1", "Decision": "Discuss"}, {"Title": "CONSTRUCTION OF A REALISTIC RED-BLOOD-CELL COMPUTATIONAL MODEL AT THE MOLECULAR LEVEL", "Presenter": "Hanene Samia AMEUR", "Sex": "Female", "Presenter Affiliation": "Laboratoire de Biochimie Théorique, CNRS UMR8266, Université Paris Cité", "Presenter Country": "France", "Presenter Email": "ameur@ibpc.fr", "Presentation Requested": "Poster", "Employment": "PhD student", "Abstract": "Biological membranes have been studied using computational models that span different spatial and temporal scales. Continuum models capture large-scale membrane behavior using effective physical properties. At a finer level of resolution, atomistic molecular dynamics represents individual atoms and their interactions within the membrane.", "Deadline": "Round 2", "Decision": "Poster"}, {"Title": "CROWDING-CONTROLLED STREPTAVIDIN MOBILITY AND HYALURONAN BRUSH DIFFUSION ON SUPPORTED MEMBRANES", "Presenter": "Wanchung CHIANG", "Sex": "Male", "Presenter Affiliation": "Université Grenoble Alpes (UGA) – CNRS, LIPhy", "Presenter Country": "France", "Presenter Email": "", "Presentation Requested": "", "Employment": "Unknown", "Abstract": "Cell adhesion is mediated by soft cell-surface coatings such as the glycocalyx - a hydrated polysaccharide brush-like structure. To quantitatively study the contribution of these parameters to adhesion strength, we use a minimal membrane platform in which molecular density, mobility and brush conformation can be varied independently.", "Deadline": "Round 1", "Decision": "Discuss"}, {"Title": "DECODING THE LIPID-PROTEIN INTERFACE OF MEMBRANE TRANSPORTERS: FROM ALLOSTERIC DYNAMICS TO STRUCTURAL PHARMACOLOGY", "Presenter": "Florent DI MEO", "Sex": "Male", "Presenter Affiliation": "Inserm U1248 Pharmacology & Transplantation, Univ. Limoges", "Presenter Country": "France", "Presenter Email": "florent.di-meo@inserm.fr", "Presentation Requested": "Oral", "Employment": "Unknown", "Abstract": "Membrane transporters, including the ATP-Binding Cassette (ABC) and Solute Carrier superfamilies, are critical gatekeepers governing cellular homeostasis, local pharmacokinetics and physiological states. While structural biology has made available a myriad of static structures, understanding their structural pharmacology requires investigating their dynamic behaviour within a realistic lipid bilayer membrane.", "Deadline": "Round 1", "Decision": "Oral"}, {"Title": "DECODING THE ROLES OF RHIZOBIA-INDUCED SOSEKI FAMILY MEMBERS IN CELL POLARITY PROCESSES DURING LEGUME ROOT SYMBIOSIS", "Presenter": "Natasha HORTA ARAÚJO", "Sex": "Female", "Presenter Affiliation": "Laboratory of Plant-Microbe-Environment Interactions (LIPME), Toulouse University, CNRS, INRAE", "Presenter Country": "France", "Presenter Email": "natasha.horta-araujo@inrae.fr", "Presentation Requested": "Oral", "Employment": "Post-doc", "Abstract": "Legumes can establish beneficial symbiotic associations with rhizobial bacteria to acquire nitrogen, that is crucial for plant growth. This interaction leads to the formation of root nodules, specialized organs where bacteria fix atmospheric nitrogen for the host plant.", "Deadline": "Round 2", "Decision": "Discuss"}, {"Title": "DEVELOPMENT OF BIOMATERIAL LOADED WITH ANTIMICROBIAL PEPTIDES FOR THE TREATMENT OF ORTHOPAEDIC INFECTIONS", "Presenter": "Jean-Daniel MALCOR", "Sex": "Male", "Presenter Affiliation": "Laboratoire de Biologie Tissulaire et Ingénierie Thérapeutique (LBTI), CNRS, Lyon, France", "Presenter Country": "France", "Presenter Email": "jean-daniel.malcor@ibcp.fr", "Presentation Requested": "Poster", "Employment": "PhD student", "Abstract": "Periprosthetic joint infections (PJIs) are among the most common implant-associated infections, affecting approximately 1-2% of joint replacement patients. These infections can compromise implant success and delay patient recovery.", "Deadline": "Round 1", "Decision": "Poster"}, {"Title": "DURABIN: MULTISCALE MODELING OF BIOLOGICAL MEMBRANES", "Presenter": "Stéphanie BAUD", "Sex": "Female", "Presenter Affiliation": "Université de Reims Champagne Ardenne, UMR CNRS/URCA 7369", "Presenter Country": "France", "Presenter Email": "stephanie.baud@univ-reims.fr", "Presentation Requested": "Oral", "Employment": "PhD student", "Abstract": "Many essential biological processes, such as protein folding and membrane remodeling, are inherently multiscale, going from atomic-level interactions to mesoscopic structures.", "Deadline": "Round 1", "Decision": "Poster"}, {"Title": "EXPLORING AMYLOID-β INTERACTIONS WITH MULTICOMPONENT NEURONAL MEMBRANES", "Presenter": "Sahire Azam ANSARY", "Sex": "Female", "Presenter Affiliation": "MIFT, University of Messina", "Presenter Country": "Italy", "Presenter Email": "sahire_azam.ansary@chem.lu.se", "Presentation Requested": "Oral", "Employment": "Post-doc", "Abstract": "The aggregation of amyloid-β (Aβ) peptides and their interactions with neuronal membranes are central to the pathology of Alzheimer’s disease. Although the two predominant isoforms, Aβ40 and Aβ42, are known to associate with lipid bilayers, their molecular behaviour in compositionally complex neuronal membranes remains incompletely understood.", "Deadline": "Round 2", "Decision": "Discuss"}, {"Title": "EXTENSION OF THE MULTI-EGO STRUCTURE-BASED FORCE FIELD TO LIPID MEMBRANES", "Presenter": "Laura AIRAGHI", "Sex": "Female", "Presenter Affiliation": "Università degli Studi di Milano, Department of Biosciences", "Presenter Country": "Italy", "Presenter Email": "laura.airaghi@unimi.it", "Presentation Requested": "Poster", "Employment": "PhD student", "Abstract": "Membranes are fundamental structures of living systems and, despite an apparent simple composition, still represent a major challenge for state-of-the-art modeling.", "Deadline": "Round 1", "Decision": "Poster"}, {"Title": "FIRST EVER Eu3+ COMPLEX AS MEMBRANE PROBE", "Presenter": "Léo CORNE", "Sex": "Male", "Presenter Affiliation": "Laboratoire de Chimie, ENS de Lyon", "Presenter Country": "France", "Presenter Email": "leo.corne@ens-lyon.fr", "Presentation Requested": "Oral or poster", "Employment": "PhD student", "Abstract": "Lanthanide complexes exhibit unique luminescent properties: long emission lifetimes (ms), intense and narrow characteristic emission bands (which enable the study of the environment), as well as tunable absorption characteristics.", "Deadline": "Round 1", "Decision": "Discuss"}, {"Title": "FROM LIPID MEMBRANES TO LIPID NANOPARTICLE DESIGN WITH MARTINI 3 MODEL", "Presenter": "Paulo C. T. SOUZA", "Sex": "Male", "Presenter Affiliation": "Laboratoire de Biologie et Modélisation de la Cellule, CNRS, UMR 5239, Inserm, U1293, Université Claude Bernard Lyon 1, Ecole Normale Supérieure de Lyon", "Presenter Country": "France", "Presenter Email": "paulo.telles_de_souza@ens-lyon.fr", "Presentation Requested": "Oral", "Employment": "Unknown", "Abstract": "Lipid assemblies exhibit complex phase behavior that governs organization, remodeling, fusion, and molecular transport.", "Deadline": "Round 2", "Decision": "Discuss"}, {"Title": "FROM MEMBRANE DISRUPTION TO RECEPTOR ACTIVATION - MECHANISTIC INSIGHTS INTO PSMα3 CYTOTOXICITY", "Presenter": "Laura BONNECAZE", "Sex": "Female", "Presenter Affiliation": "Univ. Bordeaux, CNRS, Bordeaux INP, CBMN, UMR5248", "Presenter Country": "France", "Presenter Email": "laura.bonnecaze@u-bordeaux.fr", "Presentation Requested": "Oral or poster", "Employment": "PhD student", "Abstract": "The virulence of Staphylococcus aureus, a multi-drug-resistant pathogen, is tightly linked to the secretion of phenol-soluble modulins (PSMs), notably PSMα3 which self-assembles into unique cross-α amyloid-like fibrils.", "Deadline": "Round 1", "Decision": "Oral"}, {"Title": "FROM MEMBRANE PERTURBATION TO BIOFILM ARCHITECTURE - IMPACT OF PSMΑ3 ON STAPHYLOCOCCUS EPIDERMIDIS", "Presenter": "Chloé BOURA", "Sex": "Female", "Presenter Affiliation": "Univ. Bordeaux, CNRS, Bordeaux INP, CBMN, UMR5248", "Presenter Country": "France", "Presenter Email": "chloe.boura@u-bordeaux.fr", "Presentation Requested": "Oral or poster", "Employment": "PhD student", "Abstract": "Polymicrobial biofilms formed by Staphylococcus aureus and Staphylococcus epidermidis are a major clinical challenge due to their antibiotic resistance.", "Deadline": "Round 1", "Decision": "Poster"}, {"Title": "HIGH AFFINITY ARTIFICIAL BINDERS FOR INTEGRATED CHARACTERIZATION OF AN ESSENTIAL MALARIA PROTEIN", "Presenter": "Thibaud DIEUDONNE", "Sex": "Male", "Presenter Affiliation": "Université Paris-Saclay, CEA, CNRS, Institute for Integrative Biology of the Cell (I2BC)", "Presenter Country": "France", "Presenter Email": "thibaud.dieudonne@i2bc.paris-saclay.fr", "Presentation Requested": "Oral or poster", "Employment": "Post-doc", "Abstract": "Despite major progress in malaria control, the disease remains a significant global health challenge driven by the emergence of multidrug resistance among parasite species.", "Deadline": "Round 1", "Decision": "Discuss"}, {"Title": "HIGH-RESOLUTION CRYO-EM STRUCTURES OF VDAC2-BAX/BAK COMPLEXES TO ELUCIDATE MITOCHONDRIAL APOPTOSIS MECHANISMS", "Presenter": "Agathe HUBERT", "Sex": "Female", "Presenter Affiliation": "CNRS - LISM, UMR7255", "Presenter Country": "France", "Presenter Email": "lbergdoll@imm.cnrs.fr", "Presentation Requested": "Poster", "Employment": "PhD student", "Abstract": "Apoptosis is a tightly regulated form of programmed cell death that plays a fundamental role in development and tissue homeostasis. In the intrinsic apoptotic pathway, cellular stress signals trigger the activation of the pro-apoptotic proteins BAX and BAK. These proteins translocate to the mitochondrial outer membrane, where they oligomerize to form pores that enable the release of cytochrome c, initiating the caspase cascade and ultimately leading to cell death. However, the molecular mechanism governing the recruitment and insertion of BAX and BAK into the mitochondrial outer membrane remains poorly understood.", "Deadline": "Round 2", "Decision": "Poster"}, {"Title": "HOW AN ABC TRANSPORTER – TWO-COMPONENT SYSTEM MEDIATES ANTIMICROBIAL PEPTIDE RESISTANCE IN STREPTOCOCCUS PNEUMONIAE", "Presenter": "Marine NOVELLI", "Sex": "Female", "Presenter Affiliation": "Molecular Microbiology and Structural Biochemistry (MMSB), UMR 5086 CNRS/University of Lyon", "Presenter Country": "France", "Presenter Email": "cedric.orelle@ibcp.fr", "Presentation Requested": "Poster", "Employment": "Post-doc", "Abstract": "Antimicrobial peptides (AMPs), produced by most living organisms, are promising antibacterial compounds and constitute a key component of innate immunity.", "Deadline": "Round 2", "Decision": "Poster"}, {"Title": "HOW DOES THE SATURATION OF LIPIDS INFLUENCE THE ALIGNMENT OF MEMBRANE PEPTIDES?", "Presenter": "Andreas RUMPEL", "Sex": "Male", "Presenter Affiliation": "Chemistry Institute UMR7177, University of Strasbourg/CNRS", "Presenter Country": "France", "Presenter Email": "andreas.rumpel@etu.unistra.fr", "Presentation Requested": "Oral or poster", "Employment": "PhD student", "Abstract": "Two well-known antimicrobial peptides (AMPs) are magainin and PGLa enhancing their bioactivity when combined is referred to as synergism, which is most effective at a 1:1 molar ratio.", "Deadline": "Round 1", "Decision": "Poster"}, {"Title": "HOW LPS SHAPES LPTB2FG DYNAMICS IN A NATIVE-LIKE INNER MEMBRANE", "Presenter": "Dario DE VECCHIS", "Sex": "Male", "Presenter Affiliation": "Univ. Grenoble Alpes, CNRS, CEA, Institute of structural biology", "Presenter Country": "France", "Presenter Email": "dario.de-vecchis@ibs.fr", "Presentation Requested": "Oral", "Employment": "Post-doc", "Abstract": "Gram-negative bacteria rely on lipopolysaccharide (LPS) to build the outer-membrane permeability barrier that contributes to intrinsic antimicrobial resistance.", "Deadline": "Round 2", "Decision": "Discuss"}, {"Title": "HOW PGL FINDS A SWEET SPOT IN PHOSPHOLIPID MEMBRANES – A COMBINED MULTISCALE MD AND NMR STUDY", "Presenter": "Evert HAANAPPEL", "Sex": "Male", "Presenter Affiliation": "Université de Toulouse, Centre National de la Recherche Scientifique, Laboratoire de Microbiologie et Génétique Moléculaires (LMGM, UMR5100)", "Presenter Country": "France", "Presenter Email": "everhard.haanappel@utoulouse.fr", "Presentation Requested": "Poster", "Employment": "Unknown", "Abstract": "Glycolipids from pathogenic Mycobacterium tuberculosis (Mtb) play important roles during the interaction of the pathogen with macrophages, and can shape the host cell’s immune response by modulating its membrane structure and function.", "Deadline": "Round 1", "Decision": "Poster"}, {"Title": "IDENTIFYING THE MOLECULAR BASIS OF THE AUTOINHIBITION RELIEF MECHANISM OF THE DISEASE-RELATED LIPID FLIPPASE ATP8B1", "Presenter": "Thibaud DIEUDONNE", "Sex": "Male", "Presenter Affiliation": "Université Paris-Saclay, CEA, CNRS, Institute for Integrative Biology of the Cell (I2BC)", "Presenter Country": "France", "Presenter Email": "thibaud.dieudonne@i2bc.paris-saclay.fr", "Presentation Requested": "Poster", "Employment": "PhD student", "Abstract": "P4-ATPases, also known as flippases, are eukaryotic membrane proteins capable of transporting phospholipids from the exoplasmic to the cytosolic leaflet of membranes using energy from ATP hydrolysis.", "Deadline": "Round 1", "Decision": "Poster"}, {"Title": "IMPACT OF MEMBRANE POLYUNSATURATED FATTY ACIDS ON D2R HETEROMERIZATION AND SIGNALING", "Presenter": "Garima C.N Thakur", "Sex": "Female", "Presenter Affiliation": "Institut de Chimie et de Biologie des Membranes et des nano-objets, Université de Bordeaux, CNRS, UMR 5248", "Presenter Country": "France", "Presenter Email": "", "Presentation Requested": "Poster", "Employment": "Post-doc", "Abstract": "Schizophrenia is a severe neuropsychiatric disorder affecting 24 million people worldwide, characterized by immense clinical and neurobiological heterogeneity.", "Deadline": "Round 1", "Decision": "Poster"}, {"Title": "IN-SITU STRUCTURE OF BACTERIAL OUTER MEMBRANE PROTEIN A (OMPA) WITH FAST MAGIC-ANGLE SPINNING NMR", "Presenter": "Tanguy LE MARCHAND", "Sex": "Male", "Presenter Affiliation": "Centre de Résonance Magnétique Nucléaire (CRMN) à Très Hauts Champs de Lyon (UMR 5082 - CNRS, ENS Lyon, UCB Lyon 1)", "Presenter Country": "France", "Presenter Email": "tanguy.le_marchand@ens-lyon.fr", "Presentation Requested": "Oral", "Employment": "Unknown", "Abstract": "Outer Membranes (OM) of Gram-negative bacteria are key targets for antimicrobial research. Their investigation is however challenging for most analytical techniques due to their complex and unique structure.", "Deadline": "Round 2", "Decision": "Discuss"}, {"Title": "IN-SITU STRUCTURE OF OUTER MEMBRANE PROTEIN A: A NOVEL STRUCTURE REFINEMENT PROTOCOL", "Presenter": "Veronica CRESPI", "Sex": "Female", "Presenter Affiliation": "Inserm, Pharmacology and Transplantation, UMR 1248, Centre de Biologie et Recherche en Santé, Université de Limoges", "Presenter Country": "France", "Presenter Email": "", "Presentation Requested": "Oral", "Employment": "Unknown", "Abstract": "The structure and function of proteins are directly influenced by their surrounding chemical environment. This is particularly relevant for membrane proteins, which naturally reside in complex lipid bilayer membranes.", "Deadline": "Round 2", "Decision": "Discuss"}, {"Title": "INTERLEAFLET COUPLING DRIVES THE THERMOTROPIC BEHAVIOUR OF ASYMMETRIC MEMBRANES", "Presenter": "Julia B. BASSILA", "Sex": "Female", "Presenter Affiliation": "University of Genoa, Department of Physics", "Presenter Country": "Italy", "Presenter Email": "giulia.rossi@unige.it", "Presentation Requested": "Oral", "Employment": "Unknown", "Abstract": "Interleaflet coupling is central to membrane organization and function. Registration of ordered domains has been proposed to generate transbilayer signalling platforms, while ordered lipid environments can regulate membrane-protein function through selective recruitment.", "Deadline": "Round 1", "Decision": "Discuss"}, {"Title": "INVESTIGATING THE COLLECTIVE MECHANISM OF POLYBIA-MP1 ACROSS MEMBRANE MODELS", "Presenter": "Thaisa Joanna UZAN", "Sex": "Female", "Presenter Affiliation": "École Normale Supérieure de Lyon, Laboratoire de Biologie et Modélisation de la Cellule", "Presenter Country": "France", "Presenter Email": "thaisa.uzan@ens-lyon.fr", "Presentation Requested": "Poster", "Employment": "PhD student", "Abstract": "Antimicrobial peptides are short, predominantly cationic molecules whose mechanism of action involves electrostatic and hydrophobic interactions with cell membranes, disrupting lipid packing and inducing pores or defects that lead to cell death.", "Deadline": "Round 1", "Decision": "Poster"}, {"Title": "ION FLOW MODELING OF INSECT ODORANT RECEPTORS VIA COMPUTATIONAL ELECTROPHYSIOLOGY", "Presenter": "Sebastien FIORUCCI", "Sex": "Male", "Presenter Affiliation": "Université Côte d’Azur, CNRS, ICN", "Presenter Country": "France", "Presenter Email": "sebastien.fiorucci@univ-cotedazur.fr", "Presentation Requested": "Oral or poster", "Employment": "Post-doc", "Abstract": "Insects detect odors through odorant-activated ion channel complexes that are composed of an odorant receptor (OR) and an odorant receptor co-receptor (Orco), which are thought to exist in a 1:3 OR/Orco ratio in vivo. Recently published cryo-EM structures of OR/Orco complexes from mosquitoes with bound known agonists showed a displacement of the transmembrane helix 7b (TM7b) of the ORs which allows ions to flow through the ion channel.", "Deadline": "Round 1", "Decision": "Poster"}, {"Title": "ISOLATION AND CHARACTERIZATION OF DOPAMINE D2 RECEPTOR IN COPOLYMER-BASED NANODISCS", "Presenter": "Estelle RASCOL", "Sex": "Female", "Presenter Affiliation": "Univ. Bordeaux, CNRS, Bordeaux INP, CBMN, UMR 5248", "Presenter Country": "France", "Presenter Email": "", "Presentation Requested": "Oral or poster", "Employment": "Unknown", "Abstract": "The Dopamine D₂ receptor (D₂R) is an integral membrane protein belonging to the G-protein coupled receptor (GPCR) family. Embedded in the cell lipid membrane by its seven transmembrane helices, it is a major therapeutic target, antagonists being used to treat schizophrenia or agonists used in Parkinson's disease treatment. Isolation of membrane proteins, and GPCRs in particular, still represents a huge challenge, even if necessary for functional and structural studies.", "Deadline": "Round 1", "Decision": "Oral"}, {"Title": "LACTOCOCCUS LACTIS, A PROMISING AND EFFICIENT FACTORY FOR THE BIOPRODUCTION OF FUNCTIONAL SOLUBLE AND MEMBRANE PROTEINS", "Presenter": "Agnes FRELET-BARRAND", "Sex": "Female", "Presenter Affiliation": "Université Marie et Louis Pasteur, CNRS, institut FEMTO-ST", "Presenter Country": "France", "Presenter Email": "", "Presentation Requested": "Poster", "Employment": "Unknown", "Abstract": "Lactococcus lactis, a gram-positive bacterium considered the model lactic acid bacteria, emerged at the beginning of the last century as a good alternative for protein expression and characterizations. Already largely used in industry for production of fermented foods and consumed by humans for hundreds of years, this “generally recognized as safe” (GRAS) microorganism can express functional soluble and membrane proteins.", "Deadline": "Round 1", "Decision": "Poster"}, {"Title": "LATTICE-BASED MESOSCALE SIMULATIONS OF CELL MEMBRANE ADHESION AND DISTRIBUTION OF LIPID RAFTS", "Presenter": "Iyad BIN HUSSAIN", "Sex": "Male", "Presenter Affiliation": "Institute of Physics, Polish Academy of Sciences", "Presenter Country": "Poland", "Presenter Email": "iyadhussain@ifpan.edu.pl", "Presentation Requested": "Oral", "Employment": "PhD student", "Abstract": "Cell membrane is an interface that separates the intracellular fluids and organelles from the extracellular environment. This interface serves as a platform to many relevant biological processes such as tissue formation, cell-cell communication, nutrient uptake and drug efflux.", "Deadline": "Round 2", "Decision": "Discuss"}, {"Title": "LINKING MEMBRANE ORGANISATION TO LIGHT-HARVESTING REGULATION IN LHCII MEMBRANES", "Presenter": "Ashley M HANCOCK", "Sex": "Female", "Presenter Affiliation": "ICFO-Institut de Ciencies Fotoniques, The Barcelona Institute of Science and Technology", "Presenter Country": "Spain", "Presenter Email": "", "Presentation Requested": "Oral or poster", "Employment": "Post-doc", "Abstract": "Photosynthetic light harvesting is governed by collective excitonic interactions within densely packed pigment–protein membranes, where nanoscale organisation shapes both energy transfer and photoprotective dissipation. In plants, the major antenna complex LHCII sits at the centre of this balance, yet the causal link between lateral membrane organisation and excitation-energy dynamics remains poorly resolved.", "Deadline": "Round 2", "Decision": "Discuss"}, {"Title": "LIPID COMPOSITION GOVERNS MEMBRANE BINDING AND CONFORMATIONAL DYNAMICS OF THE MYOSIN-1C TAIL DOMAIN", "Presenter": "Hafez RAZMAZMA", "Sex": "Male", "Presenter Affiliation": "University of Warwick, Warwick Medical School", "Presenter Country": "UK", "Presenter Email": "hafez.razmazma@warwick.ac.uk", "Presentation Requested": "Poster", "Employment": "Post-doc", "Abstract": "Class I myosins are essential linkers between the actin cytoskeleton and the plasma membrane, where they generate tension and organise membrane nanodomains. Myosin-1c (Myo1c) is a key example: its tail domain, composed of three calmodulin-bound IQ motifs, a post-IQ linker, and a pleckstrin homology (PH) domain, anchors the motor to the inner leaflet of the plasma membrane.", "Deadline": "Round 1", "Decision": "Poster"}, {"Title": "LIPID-DRIVEN ORGANIZATION OF THE SYNERGISTIC ANTIMICROBIAL PEPTIDES PGLA AND MAGAININ 2 ON MEMBRANE SURFACES", "Presenter": "Christopher AISENBREY", "Sex": "Male", "Presenter Affiliation": "UMR7177 CNRS/Université de Strasbourg", "Presenter Country": "France", "Presenter Email": "aisenbrey@unistra.fr", "Presentation Requested": "Oral or poster", "Employment": "CNRS", "Abstract": "The antimicrobial peptides PGLa and magainin 2 act synergistically on lipid membranes, yet their lateral organization on the membrane surface remains unclear. Here, we investigate their surface distribution using a fluorescence quenching approach capable of detecting intermolecular contacts within ~1 nm.", "Deadline": "Round 1", "Decision": "Oral"}, {"Title": "LIPIDS ARE ENDOGENOUS MODULATORS OF CLASS C GPCRS", "Presenter": "Anaïs MENNY", "Sex": "Female", "Presenter Affiliation": "Institut de Génomique Fonctionnelle (IGF), University of Montpellier, CNRS, INSERM", "Presenter Country": "France", "Presenter Email": "anais.menny@igf.cnrs.fr", "Presentation Requested": "Oral", "Employment": "Unknown", "Abstract": "G Protein-Coupled Receptors (GPCRs) are modulated by membrane lipids, which help stabilize conformations, shape ligand pockets, and influence downstream signaling via G proteins and β-arrestins. However, how lipids modulate class C GPCRs, a sub-family of 22 obligate dimers with extensive membrane interactions, is not known.", "Deadline": "Round 2", "Decision": "Discuss"}, {"Title": "LIPOPROTEIN RECOGNITION AND TRANSPORT BY LOLCDE ABC TRANSPORTERS", "Presenter": "Elisa ALIU", "Sex": "Female", "Presenter Affiliation": "Molecular Microbiology and Structural Biochemistry (MMSB), CNRS UMR5086, Université de Lyon", "Presenter Country": "France", "Presenter Email": "elise.kaplan@cnrs.fr", "Presentation Requested": "Poster", "Employment": "PhD student", "Abstract": "Antibiotic resistance is a major public health concern. Among the defence mechanisms of bacteria, the cell envelope acts as a first line of defence against antibiotics. In Gram-negative bacteria, lipoproteins play an essential role in maintaining membrane integrity, adhesion, virulence and nutrient uptake.", "Deadline": "Round 2", "Decision": "Poster"}, {"Title": "LOCALIZATION AND QUANTIFICATION OF PMAP23 DURING E. COLI KILLING", "Presenter": "Federico CARNERI", "Sex": "Male", "Presenter Affiliation": "Department of Chemical Science and Technologies, University of Rome Tor Vergata", "Presenter Country": "Italy", "Presenter Email": "federico.carneri@uniroma2.it", "Presentation Requested": "Oral", "Employment": "PhD student", "Abstract": "Antimicrobial peptides (AMPs) rapidly kill bacteria by permeabilizing their membranes, yet their spatial distribution throughout the killing process remain largely unresolved. In our previous kinetic study, dansyl-labelled PMAP23 revealed four sequential events during its interaction with E. coli.", "Deadline": "Round 2", "Decision": "Discuss"}, {"Title": "MARTINI 3 COARSE-GRAINED FORCEFIELD FOR NON-CANONICAL AMINO ACIDS", "Presenter": "Luís BORGES-ARAÚJO", "Sex": "Male", "Presenter Affiliation": "Laboratoire de Biologie et Modélisation de la Cellule, CNRS, UMR 5239, Inserm, U1293, Université Claude Bernard Lyon 1, Ecole Normale Supérieure de Lyon", "Presenter Country": "France", "Presenter Email": "luis.borges@ens-lyon.fr", "Presentation Requested": "Poster", "Employment": "PhD student", "Abstract": "Peptides and proteins represent increasingly important targets for therapeutic development due to their high specificity and favorable toxicity profiles. However, their application is often limited by challenges such as poor membrane permeability, low metabolic stability, and limited aqueous solubility.", "Deadline": "Round 1", "Decision": "Poster"}, {"Title": "MECHANISM OF ACTION OF NON-LYTIC ANTIMICROBIAL PEPTIDES STUDIED BY IN VIVO SOLID-STATE NMR AND FLUORESCENCE MICROSCOPY", "Presenter": "Hugo LEGRAS-HEMONNOT", "Sex": "Male", "Presenter Affiliation": "Chimie Physique et Chimie du Vivant, CPCV, CNRS UMR 8228, Sorbonne Université", "Presenter Country": "France", "Presenter Email": "hugo.legras-hemonnot@sorbonne-universite.fr", "Presentation Requested": "Oral", "Employment": "PhD student", "Abstract": "Non-lytic antimicrobial peptides (AMPs) kill bacteria by reaching the cytoplasm and binding with an intracellular target, but the way they cross the cell membrane is poorly understood. We used in vivo 2H solid-state NMR to study how the translocation of several non-lytic AMPs, such as buforin and oncocin, affects the order and rigidity of the deuterium-labeled membranes of E. coli.", "Deadline": "Round 1", "Decision": "Oral"}, {"Title": "MECHANISTIC INSIGHT INTO IONIZABLE CATIONIC LIPID-MEDIATED ENDOSOMAL ESCAPE VIA TRANSIENT LIPID COMPLEXES", "Presenter": "David Noel ZIMMER", "Sex": "Male", "Presenter Affiliation": "Faculty of Physics and Astronomy, Ruhr University Bochum", "Presenter Country": "Germany", "Presenter Email": "", "Presentation Requested": "Oral or poster", "Employment": "PhD student", "Abstract": "RNA-based therapeutics have demonstrated remarkable efficacy and hold great promise for future applications in personalized medicine. The most common delivery systems for these drugs are lipid-based nanoparticles (LNPs), which incorporate ionizable cationic lipids (ICLs) as key components.", "Deadline": "Round 2", "Decision": "Discuss"}, {"Title": "MITOCHONDRIAL PREPROTEIN IMPORT: TIM50 MEDIATED COUPLING OF PRESEQUENCE TRANSLOCASE AND RESPIRATORY CHAIN COMPLEXES", "Presenter": "Raffaele IEVA", "Sex": "Male", "Presenter Affiliation": "Laboratoire de Microbiologie et Génétique Moléculaires (LMGM), Centre de Biologie Intégrative (CBI), Université de Toulouse, CNRS", "Presenter Country": "France", "Presenter Email": "raffaele.ieva@utoulouse.fr", "Presentation Requested": "Poster", "Employment": "PhD student", "Abstract": "Biogenesis of mitochondria, organelles crucial for cell metabolisms and signaling, strictly depends on the import of >1000 protein precursors (preproteins). The mitochondrial membrane potential (ΔΨ) generated by respiratory chain complexes (RCCs) energizes consecutive preprotein import steps mediated by the presequence translocase (TIM23).", "Deadline": "Round 2", "Decision": "Poster"}, {"Title": "MODELLING DIELECTRIC PERMITTIVITY OF WATER CONFINED BETWEEN CHARGED LIPID LAYERS WITH A MODIFIED POISSON-BOLTZMANN MODEL", "Presenter": "Ludovic GARDRÉ", "Sex": "Male", "Presenter Affiliation": "Université Claude Bernard Lyon 1, CNRS, ILM, UMR 5306", "Presenter Country": "France", "Presenter Email": "ludovic.gardre@univ-lyon1.fr", "Presentation Requested": "Oral", "Employment": "Post-doc", "Abstract": "Lipid membranes play key roles in biological systems. Electrostatic interactions often govern nearby dynamics and can even affect membrane structure: like-charged lipid layers immersed in multivalent ion solutions can attract each other.", "Deadline": "Round 1", "Decision": "Discuss"}, {"Title": "MODELLING HOST-PATHOGEN INTERACTIONS USING MULTISCALE MD SIMULATIONS: THE MYCOBACTERIUM TUBERCULOSIS CASE", "Presenter": "Matthieu CHAVENT", "Sex": "Male", "Presenter Affiliation": "Université de Toulouse, CNRS, Laboratoire de Microbiologie et de Génétique Moléculaires, CBI", "Presenter Country": "France", "Presenter Email": "", "Presentation Requested": "Oral", "Employment": "Unknown", "Abstract": "Mycobacterium tuberculosis, the causative agent of tuberculosis, possesses an unusually thick, waxy cell envelope composed of a diverse array of complex lipids. These lipids not only provide the structural framework of the mycobacterial envelope but also contribute to virulence by perturbing host membranes and interacting with host-cell receptors.", "Deadline": "Round 1", "Decision": "Oral"}, {"Title": "MOLECULAR AND STRUCTURAL INSIGHTS INTO HAEMOPHILUS INFLUENZAE HAEM ACQUISITION FROM HUMAN HAEMOPROTEINS", "Presenter": "Xiu TIAN", "Sex": "Female", "Presenter Affiliation": "Institute of Physico-Chemical Biology (IBPC), UMR7099, Laboratory of Membrane Proteins Biochemistry, CNRS, Paris Cité University", "Presenter Country": "France", "Presenter Email": "", "Presentation Requested": "Oral", "Employment": "Unknown", "Abstract": "Haemophilus influenzae is an opportunistic, Gram-negative bacterium that only colonizes humans and can be responsible for various diseases. As a haem auxotroph, this bacterium needs to acquire haem from its host haemoproteins in order to survive and sustain infection.", "Deadline": "Round 1", "Decision": "Oral"}, {"Title": "MOLECULAR CHARACTERIZATION OF GANGLIOSIDE-PEPTIDE INTERACTIONS", "Presenter": "Clotilde NARCY", "Sex": "Female", "Presenter Affiliation": "Sorbonne Université, Laboratoire CPCV", "Presenter Country": "France", "Presenter Email": "", "Presentation Requested": "Oral", "Employment": "PhD student", "Abstract": "Gangliosides are glycosphingolipids found in small quantities in cell membranes and are characterized by remarkable molecular diversity. Recently, a renewed interest in the analysis of these species has reinforced our conviction that a detailed and more thorough characterization of these molecules is necessary to fully understand their biological functions at the molecular level.", "Deadline": "Round 1", "Decision": "Oral"}, {"Title": "MOLECULAR DISTRIBUTION IN LIPID NANOPARTICLES IN THE PRESENCE OF DIFFERENT mRNA TOPOLOGIES AND IONIZABLE LIPIDS", "Presenter": "Paulo C. T. SOUZA", "Sex": "Male", "Presenter Affiliation": "École Normale Supérieure de Lyon, Laboratoire de Biologie et Modélisation de la Cellule", "Presenter Country": "France", "Presenter Email": "paulo.telles_de_souza@ens-lyon.fr", "Presentation Requested": "Oral or poster", "Employment": "Post-doc", "Abstract": "Lipid nanoparticles (LNPs) are the leading delivery vehicles for mRNA therapeutics, including vaccines. Despite their clinical success, key challenges persist regarding mRNA stability, encapsulation efficiency, and endosomal release.", "Deadline": "Round 2", "Decision": "Discuss"}, {"Title": "MOLECULAR DYNAMICS EVALUATION OF MECHANISTIC PROPERTIES DRIVING PASSIVE PERMEATION IN BINARY BILAYERS", "Presenter": "Gabin FABRE", "Sex": "Male", "Presenter Affiliation": "INSERM U1248 Pharmacology & Transplantation, Faculty of Pharmacy, University of Limoges", "Presenter Country": "France", "Presenter Email": "gabin.fabre@unilim.fr", "Presentation Requested": "Poster", "Employment": "Unknown", "Abstract": "While passive permeation is important for pharmacokinetics, the thermodynamic impact of biological membrane complexity remains poorly mapped. We systematically evaluated how lipid bilayer composition shapes the free energy profiles of six diverse drug-like xenobiotics.", "Deadline": "Round 1", "Decision": "Poster"}, {"Title": "MOLECULAR DYNAMICS INSIGHTS INTO STEROID MODULATION OF NMDA RECEPTORS", "Presenter": "Yuan Chang-Halabi", "Sex": "", "Presenter Affiliation": "Institute of Pharmaceutical and Medicinal Chemistry, Universität Münster", "Presenter Country": "Germany", "Presenter Email": "yuan.chang@uni-muenster.de", "Presentation Requested": "Poster", "Employment": "PhD student", "Abstract": "Ion channels are embedded in complex lipid environments that modulate their structure, dynamics, and function. The membrane-mediated modulation of the N-methyl-D-aspartate receptor (NMDAR) has been recognized for decades; however, the underlying molecular mechanisms are not fully understood.", "Deadline": "Round 2", "Decision": "Poster"}, {"Title": "MOLECULAR DYNAMICS OF NEURONAL MEMBRANES AND ION CHANNELS UNDER ULTRASOUND AND LASER STIMULATION", "Presenter": "Phuong H. NGUYEN", "Sex": "Female", "Presenter Affiliation": "Laboratoire de Biochimie Théorique, UPR9080 CNRS et Université Paris Cité", "Presenter Country": "France", "Presenter Email": "", "Presentation Requested": "", "Employment": "Unknown", "Abstract": "Altered membrane mechanics and ion channel dysfunction are key features of Alzheimer's disease (AD) pathology. In this talk, I will present molecular dynamics simulations that reveal how differences in membrane elasticity between healthy and AD neurons affect amyloid-beta (Aβ) interactions and the structural stability of ion channels.", "Deadline": "Round 1", "Decision": "Poster"}, {"Title": "MOLECULAR MECHANISM OF SIGNALING OF A LYSOSOMAL AMINO ACID TRANSCEPTOR", "Presenter": "Philémon VON GAUDECKER", "Sex": "Male", "Presenter Affiliation": "Intistute of integral biology of the Cell, Gif-sur-Yvette", "Presenter Country": "France", "Presenter Email": "philemon.vongaudecker@i2bc.paris-saclay.fr", "Presentation Requested": "Poster", "Employment": "PhD student", "Abstract": "As lysosomes become more and more characterized as signaling hubs, new studies have shown that the lysosomal cationic amino acid transporter PQLC2 is involved in the regulation of an emerging signaling pathway.", "Deadline": "Round 1", "Decision": "Poster"}, {"Title": "MOLECULAR MECHANISMS OF EXCITATORY GLYCINE RECEPTORS", "Presenter": "Anto CERASALE", "Sex": "Male", "Presenter Affiliation": "Institut de Biologie de l'Ecole Normale Supérieure (IBENS), Ecole Normale Supérieure, Université PSL, CNRS, INSERM", "Presenter Country": "France", "Presenter Email": "cerasale@bio.ens.psl.eu", "Presentation Requested": "", "Employment": "Unknown", "Abstract": "Within the ionotropic glutamate receptors iGluR family, GluN1/GluN3A forms an atypical subtype of NMDA receptors (NMDARs). Unlike conventional NMDARs, both the GluN3A and GluN1 subunits are insensitive to glutamate.", "Deadline": "Round 2", "Decision": "Poster"}, {"Title": "MOLECULAR MECHANISMS OF PROTEIN-ASSISTED PASSIVE PERMEATION", "Presenter": "Taoufiq BOURAKADI", "Sex": "Male", "Presenter Affiliation": "INSERM U1248 Pharmacology & Transplantation, Faculty of Pharmacy, University of Limoges", "Presenter Country": "France", "Presenter Email": "gabin.fabre@unilim.fr", "Presentation Requested": "Poster", "Employment": "PhD student", "Abstract": "Traditional modeling of passive permeation largely ignored the presence of transmembrane peptides, relegating them strictly to active transport roles. However, given the high protein density of biological membranes, permeants inevitably interact with transmembrane domains before entering the hydrophobic core.", "Deadline": "Round 1", "Decision": "Poster"}, {"Title": "MULTISCALE MODELLING OF CD9 CONFORMATIONAL DYNAMICS AND MEMBRANE REMODELING", "Presenter": "Irene CADENELLI", "Sex": "Female", "Presenter Affiliation": "Department of Physics, University of Genoa, and INFN, Sezione di Genova", "Presenter Country": "Italy", "Presenter Email": "irene.cadenelli@edu.unige.it", "Presentation Requested": "Oral", "Employment": "PhD student", "Abstract": "Extracellular vesicles are nanoscale membrane-bound carriers involved in intercellular communication and in multiple physiological and pathological processes. Tetraspanins are key markers and structural regulators of extracellular vesicles, contributing to the formation of a dynamic interaction platform known as the tetraspanin web.", "Deadline": "Round 1", "Decision": "Oral"}, {"Title": "MYCOBACTERIAL WAG31 MEDIATES POLAR ORGANISATION AND CELL SHAPE BY INTERACTION WITH CONSERVED TRANSMEMBRANE PARTNERS", "Presenter": "Gabriel BRUNK", "Sex": "Male", "Presenter Affiliation": "Institut Pasteur, Université Paris Cité, CNRS UMR 3528, Bacterial Cell Cycle Mechanisms Unit", "Presenter Country": "France", "Presenter Email": "gabriel.brunk@pasteur.fr", "Presentation Requested": "Poster", "Employment": "PhD student", "Abstract": "The bacterial cell cycle requires a tight coordination of incorporation of new cell wall material at sites of elongation and division. While common model organisms like Escherichia coli and Bacillus subtilis elongate laterally, Mycobacteriales, including major human pathogens like Mycobacterium tuberculosis and Corynebacterium diphteriae, elongate from their cell poles.", "Deadline": "Round 2", "Decision": "Poster"}, {"Title": "NANOPARTICLE-MEDIATED MEMBRANE FUSION: INTERPLAY OF MEMBRANE CURVATURE AND NANOPARTICLE SIZE", "Presenter": "Annalisa RELINI", "Sex": "Female", "Presenter Affiliation": "University of Genoa, Department of Physics", "Presenter Country": "Italy", "Presenter Email": "Annalisa.Relini@unige.it", "Presentation Requested": "Oral", "Employment": "Unknown", "Abstract": "The ability to induce membrane fusion in vitro has become a major goal in synthetic biology. Amphiphilic gold nanoparticles (AuNPs) embedded in zwitterionic lipid vesicles can act as a minimal synthetic fusion machinery tuned by calcium ions.", "Deadline": "Round 1", "Decision": "Discuss"}, {"Title": "NUMERICAL MODELING OF NEMATIC MEMBRANES WITH ACTIVE ANISOTROPIC INCLUSIONS", "Presenter": "Mitja DRAB", "Sex": "Male", "Presenter Affiliation": "University of Ljubljana", "Presenter Country": "Slovenia", "Presenter Email": "", "Presentation Requested": "", "Employment": "Unknown", "Abstract": "Biological membranes are active, multicomponent systems whose shape emerges from a complex interplay between curvature-inducing inclusions, in-plane ordering, and cytoskeletal forces. In this talk, I present a numerical framework for modeling closed membranes populated by curved anisotropic components that interact via nematic alignment and couple to active forces.", "Deadline": "Round 1", "Decision": "Poster"}, {"Title": "PHOTOREACTIVE COUMARINS FOR PEPTIDE-MEMBRANE INTERACTIONS USING FLUORESCENCE IMAGING AND MASS SPECTROMETRY", "Presenter": "Julien DE CLERCQ", "Sex": "Male", "Presenter Affiliation": "Chimie Physique et Chimie du Vivant (CPCV) – UMR 8228 – CNRS – ENS-PSL – Sorbonne Université", "Presenter Country": "France", "Presenter Email": "julien.de_clercq@sorbonne-universite.fr", "Presentation Requested": "Poster", "Employment": "PhD student", "Abstract": "Antimicrobial peptides (AMPs) and cell-penetrating peptides (CPPs) are membrane-active molecules with antibacterial and delivery properties. Getting insights into the interactions that underlie their biological activity is crucial to design new sequences with enhanced properties.", "Deadline": "Round 1", "Decision": "Poster"}, {"Title": "POLLUTED MEMBRANES UNDER HIGH PRESSURE: A NEUTRON SCATTERING STUDY", "Presenter": "Judith PETERS", "Sex": "Female", "Presenter Affiliation": "University Grenoble Alpes, CNRS, LiPhy", "Presenter Country": "France", "Presenter Email": "jpeters@ill.fr", "Presentation Requested": "Oral", "Employment": "Unknown", "Abstract": "Plastic pollution is widely recognized for its visible impact on oceans and wildlife, but less attention is given to the molecular byproducts that arise as plastics degrade. Among these, styrene oligomers (SOs)—small molecules released from polystyrene—may pose hidden risks to living systems.", "Deadline": "Round 1", "Decision": "Discuss"}, {"Title": "POSITIVE ALLOSTERIC MODULATION OF THE METABOTROPIC GLUTAMATE RECEPTOR 5", "Presenter": "Weronika CHOJNACKA", "Sex": "Female", "Presenter Affiliation": "IGF, Université de Montpellier, CNRS, Inserm", "Presenter Country": "France", "Presenter Email": "", "Presentation Requested": "Oral", "Employment": "Post-doc", "Abstract": "The metabotropic glutamate receptor 5, mGlu5, is widely expressed in the brain where it modulates synaptic plasticity and plays important roles in physiological and pathological processes, such as learning, memory and schizophrenia. Upregulation of mGlu5 using positive allosteric modulators (PAMs) can treat most of the symptoms observed in preclinical models of schizophrenia.", "Deadline": "Round 2", "Decision": "Discuss"}, {"Title": "PRODUCTION OF MATCHOUT-DEUTERATED CHOLESTEROL AND ITS DERIVATIVES FOR NEUTRON SCATTERING STUDIES", "Presenter": "Krishna Chaithanya BATCHU", "Sex": "Male", "Presenter Affiliation": "Institut Laue-Langevin", "Presenter Country": "France", "Presenter Email": "batchu@ill.fr", "Presentation Requested": "Poster", "Employment": "Unknown", "Abstract": "Selective deuteration of biomolecules is a powerful strategy for neutron scattering studies, enabling contrast variation experiments that reveal the structure and dynamics of complex biological systems. In this work, we present a robust protocol for the production of matchout-deuterated cholesterol.", "Deadline": "Round 1", "Decision": "Poster"}, {"Title": "REGIMES OF PEARLING DYNAMICS IN TUBULAR VESICLES", "Presenter": "Maksim SHISHKIN", "Sex": "Male", "Presenter Affiliation": "Landau Institute for Theoretical Physics of RAS", "Presenter Country": "Russia", "Presenter Email": "max.shishckin2011@gmail.com", "Presentation Requested": "Oral or poster", "Employment": "PhD student", "Abstract": "Pearling converts membrane tubes into beads joined by thin tethers. We combine linear stability analysis and axisymmetric simulations to study pearling under different stretching protocols.", "Deadline": "Round 2", "Decision": "Discuss"}, {"Title": "REGULATION OF SERCA BY MEMBRANE POLYPEPTIDES", "Presenter": "Gianluigi VEGLIA", "Sex": "Male", "Presenter Affiliation": "University of Minnesota, Biochemistry, Molecular Biology and Biophysics", "Presenter Country": "USA", "Presenter Email": "vegli001@umn.edu", "Presentation Requested": "Oral", "Employment": "Unknown", "Abstract": "Calcium homeostasis is fundamental to heart muscle contraction and is primarily maintained by the sarcoplasmic reticulum Ca2+-ATPase (SERCA), which is responsible for the bulk of intracellular calcium transport in humans.", "Deadline": "Round 1", "Decision": "Oral"}, {"Title": "REMORIN-MEDIATED PROTEIN-LIPID NETWORKING DURING NANODOMAIN FORMATION IN PLANT CELLS", "Presenter": "Zeren XU", "Sex": "Female", "Presenter Affiliation": "Univ. Bordeaux, CNRS, Bordeaux INP, CBMN, UMR 5248", "Presenter Country": "France", "Presenter Email": "", "Presentation Requested": "Oral or poster", "Employment": "Unknown", "Abstract": "Biological membranes are highly dynamic platforms that can regulate essential cellular processes through the recruitment and organization of peripheral membrane proteins into functional supramolecular assemblies.", "Deadline": "Round 2", "Decision": "Discuss"}, {"Title": "SARS-COV-2 NUCLEOCAPSID PROTEIN ENGAGES WITH VIRAL RNA AND ERGIC LIPIDS TO DRIVE VIRAL CORE ASSEMBLY", "Presenter": "Cyril FAVARD", "Sex": "Male", "Presenter Affiliation": "Institut de Recherche en Infectiologie de Montpellier, IRIM, CNRS & University of Montpellier", "Presenter Country": "France", "Presenter Email": "", "Presentation Requested": "Oral", "Employment": "Unknown", "Abstract": "Severe acute respiratory syndrome coronavirus 2 assembles at the ER–Golgi intermediate compartment (ERGIC), yet the molecular basis of nucleocapsid (N) protein interactions with host membranes remains unclear.", "Deadline": "Round 1", "Decision": "Oral"}, {"Title": "SILVER RESISTANCE IN GRAM-NEGATIVE BACTERIA: INITIAL CHARACTERIZATION OF THE METAL TRANSPORTER SILP", "Presenter": "Estelle CAMPANIELLO", "Sex": "Female", "Presenter Affiliation": "Université Paris-Saclay, CEA, CNRS, Institute for Integrative Biology of the Cell (I2BC)", "Presenter Country": "France", "Presenter Email": "guillaume.lenoir@i2bc.paris-saclay.fr", "Presentation Requested": "Poster", "Employment": "PhD student", "Abstract": "Silver (Ag⁺) is currently one of the most widely used metals to combat microbial infections. The antibacterial properties of Ag⁺ are the result of various processes, including its ability to disrupt transcription or to substitute for other metals present in metalloenzymes.", "Deadline": "Round 1", "Decision": "Poster"}, {"Title": "SIMULATING COMPOSITION CHANGES IN BIOLOGICAL MEMBRANES WITH POP-MD", "Presenter": "Sonia CAMBIASO", "Sex": "Female", "Presenter Affiliation": "Molecular Microbiology and Structural Biochemistry, UMR 5086 CNRS & Université de Lyon 1", "Presenter Country": "France", "Presenter Email": "luca.monticelli@inserm.fr", "Presentation Requested": "Oral", "Employment": "Post-doc", "Abstract": "The majority of molecular dynamics (MD) simulations of biological systems are performed under thermodynamic equilibrium, whereas life is inherently a non-equilibrium phenomenon.", "Deadline": "Round 2", "Decision": "Discuss"}, {"Title": "SOLVING THE LIGAND-CHANNEL PUZZLE: AN INTEGRATED STRUCTURE-FUNCTION-BINDING PIPELINE", "Presenter": "Christophe MOREAU", "Sex": "Male", "Presenter Affiliation": "Institut de Biologie Structurale", "Presenter Country": "France", "Presenter Email": "christophe.moreau@ibs.fr", "Presentation Requested": "Poster", "Employment": "Post-doc", "Abstract": "Ion channels are major transmembrane therapeutic and agricultural targets that translate extracellular chemical signals into detectable electrical currents. Deciphering the molecular mechanisms of their regulation by ligands remains a technical challenge.", "Deadline": "Round 1", "Decision": "Poster"}, {"Title": "SPHINGOLIPIDS DRIVE SURFACTIN-INDUCED PLANT IMMUNITY THROUGH MEMBRANE REMODELLING", "Presenter": "Guillaume GILLIARD", "Sex": "Male", "Presenter Affiliation": "University of Picardie Jules Verne, unité de génie enzymatique et cellulaire (GEC)", "Presenter Country": "France", "Presenter Email": "guillaume.gilliard@u-picardie.fr", "Presentation Requested": "Oral", "Employment": "Unknown", "Abstract": "Plant-associated beneficial rhizobacteria are able to stimulate and enhance plant immunity through the secretion of metabolites, such as cyclic lipopeptides (CLPs). While the plant disease reduction due to CLPs is well-documented, their sensing mechanisms at the plant cell surface remains largely unresolved.", "Deadline": "Round 1", "Decision": "Oral"}, {"Title": "STRUCTURAL AND DYNAMICS OF APOA-1 MIMETIC PEPTIDE LIPID NANODISC ASSEMBLIES: A MOLECULAR DYNAMICS STUDY", "Presenter": "Rohith RAVI", "Sex": "Male", "Presenter Affiliation": "Université Marie & Louis Pasteur", "Presenter Country": "France", "Presenter Email": "gabin.fabre@unilim.fr", "Presentation Requested": "Oral", "Employment": "Post-doc", "Abstract": "Apolipoprotein A-I (apoA-I) mimetic peptides, inspired by the principal protein component of high-density lipoprotein, are known to self-assemble with lipids to form discoidal nanodiscs. These ones are widely used in biomedical research and as versatile scaffolds for characterization of membrane proteins in structural biology.", "Deadline": "Round 1", "Decision": "Discuss"}, {"Title": "STRUCTURAL AND FUNCTIONAL CHARACTERIZATION OF THE MYCOBACTERIAL LIPOARABINOMANNAN SUCCINYLTRANSFERASE", "Presenter": "Anna BARILE", "Sex": "Female", "Presenter Affiliation": "Institut de pharmacologie et de biologie structural (IPBS)", "Presenter Country": "France", "Presenter Email": "kien-lam.ung@ipbs.fr", "Presentation Requested": "Poster", "Employment": "Post-doc", "Abstract": "Mycobacterium tuberculosis (Mtb) is a medically important pathogen and is considered a major threat worldwide. The rise of drug-resistant Mtb has intensified the need for alternative therapeutic strategies and targeting bacterial virulence factors has emerged as a promising approach to combat antimicrobial resistance.", "Deadline": "Round 2", "Decision": "Poster"}, {"Title": "STRUCTURAL AND THERMOTROPIC EFFECTS OF LIPID HYDROPEROXIDATION IN LIPID BILAYERS", "Presenter": "Sifre VAN TEEFFELEN", "Sex": "Male", "Presenter Affiliation": "University of Lyon, ENS Lyon, CNRS UMR 5182, Chemistry Laboratory", "Presenter Country": "France", "Presenter Email": "sifre.van_teeffelen@ens-lyon.fr", "Presentation Requested": "Oral or poster", "Employment": "PhD student", "Abstract": "Lipid peroxidation is a defining feature of oxidative stress and a major factor in membrane dysfunction during aging, inflammation, and disease. While oxidation-induced changes in bilayer structure are well recognized, their impact on the main phase transition and membrane organization of phospholipids remains poorly understood.", "Deadline": "Round 1", "Decision": "Oral"}, {"Title": "STRUCTURAL BASIS OF LATERAL GATE DYNAMICS AT THE BACTERIAL LIPOPOLYSACCHARIDE HOLO-TRANSLOCON", "Presenter": "Haoxiang CHEN", "Sex": "Male", "Presenter Affiliation": "Laboratoire de Microbiologie et Génétique Moléculaires (LMGM), Centre de Biologie Intégrative (CBI), Université de Toulouse, CNRS", "Presenter Country": "France", "Presenter Email": "Raffaele.ieva@utoulouse.fr", "Presentation Requested": "Oral or poster", "Employment": "Unknown", "Abstract": "Lipopolysaccharide (LPS) assembly at the surface-exposed leaflet of the bacterial outer membrane (OM) is mediated by the OM LPS translocon, comprising the essential β-barrel protein LptD and its cognate lipoprotein LptE. How this translocon selectively transports LPS to the OM surface, establishing membrane lipid asymmetry, remains unclear.", "Deadline": "Round 2", "Decision": "Discuss"}, {"Title": "STRUCTURAL INSIGHTS INTO THE INHIBITION OF THE DRUG EFFLUX ACTIVITY OF THE HEDGEHOG RECEPTOR PATCHED1", "Presenter": "Oussama Houha", "Sex": "Male", "Presenter Affiliation": "Université Paris Cité, CNRS, Biochimie des Protéines Membranaires", "Presenter Country": "France", "Presenter Email": "valerie.biou@ibpc.fr", "Presentation Requested": "Oral or poster", "Employment": "Unknown", "Abstract": "PATCHED1 is the receptor of the HEDGEHOG morphogen and transports cholesterol in a proton motive force dependent way. In cancer, it is responsible for chemotherapy drug efflux. Screening of a natural product bank identified panicein-A hydroquinone (PAH), a marine sponge compound, as an inhibitor of PATCHED1-mediated dxr resistance.", "Deadline": "Round 1", "Decision": "Oral"}, {"Title": "STRUCTURAL STUDIES OF DIPTERA AND LEPIDOPTERA PENTAMERIC RECEPTOR FOR THE DESIGN OF INSECTICIDAL PROTEINS", "Presenter": "Farah FOULADKAR", "Sex": "Female", "Presenter Affiliation": "Institut de Biologie Structural, IBS, UGA, CNRS, UMR5075", "Presenter Country": "France", "Presenter Email": "farah.fouladkar@ibs.fr", "Presentation Requested": "Poster", "Employment": "PhD student", "Abstract": "Farmers use insecticides to protect their crops. However, these products cause environmental problems due to their lack of selectivity: while pests are killed, beneficial insects such as bees are also harmed. In our laboratory, we focus on insect pentameric ligand-gated ion channels (pLGICs).", "Deadline": "Round 1", "Decision": "Poster"}, {"Title": "STRUCTURAL WEAKNESSES ALLOW THE ABC TRANSPORTER TO DEFORM WITHIN THE MEMBRANE", "Presenter": "Theo BENEFICE", "Sex": "Male", "Presenter Affiliation": "Molecular Microbiology & Structural Biochemistry, CNRS-Lyon 1 University Laboratory, UMR 5086", "Presenter Country": "France", "Presenter Email": "", "Presentation Requested": "Oral or poster", "Employment": "PhD student", "Abstract": "ATP-binding cassette (ABC) transporters constitute one of the largest families of membrane proteins and play a key role in cellular detoxification, lipid trafficking, and multidrug resistance. These proteins must undergo conformational deformations to translocate substrates across the hydrophobic barrier of the lipid bilayer.", "Deadline": "Round 1", "Decision": "Discuss"}, {"Title": "TARGETING MEMBRANE STEROL HOMEOSTASIS WITH AZOLES TO INHIBIT PATHOGENIC YEASTS", "Presenter": "Rim BACCOUCH", "Sex": "Female", "Presenter Affiliation": "Drug Resistance & Membrane Proteins group, MMSB, UMR CNRS-UCBL1 5086", "Presenter Country": "France", "Presenter Email": "", "Presentation Requested": "Oral or poster", "Employment": "Post-doc", "Abstract": "Human fungal infections represent a growing threat to global public health and are responsible for approximately 1.6 million deaths each year. Azole antifungals remain among the most widely used treatments. They target the ER-located membrane protein CYP51, a lanosterol demethylase, involved in the ergosterol synthesis pathway.", "Deadline": "Round 1", "Decision": "Poster"}, {"Title": "TEMPERATURE-DEPENDENT NANOSCALE CONFORMATIONS OF MECHANOSENSITIVE PROTEIN BMRa", "Presenter": "Kémil BELHADJI", "Sex": "Male", "Presenter Affiliation": "Institute Curie, CNRS, Physics of Cells and Cancer", "Presenter Country": "France", "Presenter Email": "", "Presentation Requested": "Oral", "Employment": "PhD student", "Abstract": "Membrane proteins are essential for exchanges across the impermeable lipid bilayer and operate by switching between distinct conformational states in response to stimuli such as ligand binding, ATP hydrolysis, or changes in the physical properties of the membrane.", "Deadline": "Round 1", "Decision": "Discuss"}, {"Title": "THE ESSENTIAL LIPOPROTEIN MATURATION ENZYME LGT IS REQUIRED FOR FLAGELLAR AND MEMBRANE INTEGRITY IN HELICOBACTER PYLORI", "Presenter": "Tristan RUFFIOT", "Sex": "Male", "Presenter Affiliation": "", "Presenter Country": "", "Presenter Email": "", "Presentation Requested": "", "Employment": "Unknown", "Abstract": "Lipoproteins play an important role in physiology and virulence of bacteria. They are characterized by their lipid anchor allowing them to attach to the phospholipid membranes. The first step in lipoprotein maturation is catalyzed by the essential inner-membrane integral protein Lgt that transfers a diacylglyceryl group from phosphatidyglycerol to pre-pro-lipoproteins.", "Deadline": "Round 1", "Decision": "Poster"}, {"Title": "THE INTERPLAY BETWEEN OMPLA AND MEMBRANE ASYMMETRY", "Presenter": "Jackson CROWLEY", "Sex": "Male", "Presenter Affiliation": "CEITEC – Central European Institute of Technology – Masaryk University", "Presenter Country": "Czech Republic", "Presenter Email": "", "Presentation Requested": "", "Employment": "Unknown", "Abstract": "Membrane asymmetry affects not only bilayer properties but also the behavior of embedded proteins. The activity of bacterial outer membrane protein LA (OmpLA), for instance, has been linked to differential stress across the leaflets of asymmetric membranes.", "Deadline": "Round 2", "Decision": "Poster"}, {"Title": "THE PHOSPHOLIPID RESEARCH CENTER: ADVANCING PHOSPHOLIPID SCIENCE FROM BIOMEMBRANES TO PHARMACEUTICAL RESEARCH", "Presenter": "Simon DRESCHER", "Sex": "Male", "Presenter Affiliation": "Phospholipid Research Center", "Presenter Country": "Germany", "Presenter Email": "", "Presentation Requested": "", "Employment": "Unknown", "Abstract": "Phospholipids are essential components of biological membranes and play a central role in membrane structure, dynamics, organization, and function. Their physicochemical diversity, self-assembly behavior, and interactions with proteins, drugs, and other amphiphilic molecules make them highly relevant to both fundamental biomembrane science and pharmaceutical research.", "Deadline": "Round 1", "Decision": "Oral"}, {"Title": "THE TRANSPORT ACTIVITY OF PTCH1 IN HEDGEHOG SIGNALING REGULATION AND IN CHEMOTHERAPY RESISTANCE OF CANCER CELLS", "Presenter": "Isabelle MUS-VETEAU", "Sex": "Female", "Presenter Affiliation": "Institut de Pharmacologie Moléculaire et Cellulaire, Université Côte d’Azur, CNRS-UMR7275", "Presenter Country": "France", "Presenter Email": "mus-veteau@ipmc.cnrs.fr", "Presentation Requested": "Oral", "Employment": "Unknown", "Abstract": "PTCH1 is a 12 transmembrane helices protein from the RND efflux pumps which regulates the GPCR Smoothened and the Hedgehog signaling by transporting cholesterol. PTCH1 is overexpressed in many recurrent and metastatic cancers.", "Deadline": "Round 1", "Decision": "Discuss"}, {"Title": "THE ZINC-FINGER STRUCTURE OF THE CYTOSOLIC DOMAIN OF THE CCHFV Gn PROTEIN IS CONSERVED IN ITS MEMBRANE-BOUND FORM", "Presenter": "Morgane CALLON", "Sex": "Female", "Presenter Affiliation": "Molecular Microbiology and Structural Biochemistry (MMSB) UMR 5086 CNRS/Université de Lyon", "Presenter Country": "France", "Presenter Email": "", "Presentation Requested": "Poster", "Employment": "PhD student", "Abstract": "CCHFV is emerging in Europe, as its main vector, the Hyalomma tick, is spreading northward due to global warming. With a case fatality rate of up to 40%, CCHFV is one of the deadliest viruses. Despite this, there is no approved vaccine or treatment.", "Deadline": "Round 1", "Decision": "Poster"}, {"Title": "THEORETICAL AND EXPERIMENTAL APPROACHES TO STUDY TSPO1 INVOLVEMENT IN ERYTHROPOIESIS AND CHOLESTEROL TRANSLOCATION", "Presenter": "Amina BASHEER", "Sex": "Female", "Presenter Affiliation": "Université Paris Cité, Dynamique des Structures et Interactions des Macromolécules Biologiques (DSIMB), UMRS_1134", "Presenter Country": "France", "Presenter Email": "julien.diharce@inserm.fr", "Presentation Requested": "Oral", "Employment": "PhD student", "Abstract": "The translocator protein (TSPO) is an outer mitochondrial membrane protein. In mammals, in addition to cholesterol translocation TSPO involved in various important functions such as apoptosis, steroidogenesis, porphyrin transport, and heme biosynthesis.", "Deadline": "Round 1", "Decision": "Oral"}, {"Title": "TOLC CRYOEM STRUCTURE IN OUTER MEMBRANE VESICLES: A NATIVE CRYO-EM APPROACH", "Presenter": "Florent BEGUIN", "Sex": "Male", "Presenter Affiliation": "Institut de Biologie Physico-Chimique, Laboratoire de Biochimie des Protéines Membranaires (UMR7099)", "Presenter Country": "France", "Presenter Email": "", "Presentation Requested": "Oral", "Employment": "PhD student", "Abstract": "Membrane proteins represent a major challenge in structural and functional biology due to their hydrophobic nature, which complicates both their production and purification. Our study focuses on AcrAB-TolC, a tripartite efflux pump responsible for multidrug resistance in Gram-negative bacteria.", "Deadline": "Round 1", "Decision": "Oral"}, {"Title": "UNCOUPLING MYELIN MEMBRANE COMPOSITION FROM TISSUE MECHANICS: CONSEQUENCES OF SCHWANN-CELL-SPECIFIC LXRβ DELETION", "Presenter": "Tatiana El Jalkh", "Sex": "Female", "Presenter Affiliation": "Université Paris Cité, INSERM U1124 (T3S)", "Presenter Country": "France", "Presenter Email": "", "Presentation Requested": "", "Employment": "Unknown", "Abstract": "The myelin sheath of the peripheral nervous system is among the most lipid-rich biomembranes in the body: ~70% of its dry mass is lipid, dominated by cholesterol and sphingolipids, and organized into a compact multilamellar structure through the repeated wrapping of Schwann cell plasma membranes.", "Deadline": "Round 1", "Decision": "Poster"}, {"Title": "UNVEILING ANTIMICROBIAL PEPTIDE INTERACTIONS: FROM VESICLES TO LIVING CELLS VIA QUANTITATIVE SPECTROSCOPIC MEASUREMENTS", "Presenter": "Daniela ROVERSI", "Sex": "Female", "Presenter Affiliation": "Tor Vergata University of Rome, Department of Chemical Science and Technologies", "Presenter Country": "Italy", "Presenter Email": "daniela.roversi@uniroma2.it", "Presentation Requested": "Oral", "Employment": "Post-doc", "Abstract": "Antimicrobial peptides (AMPs) are promising candidates to combat the global rise of antibiotic-resistant bacteria. The effectiveness of AMPs depends on their affinity for lipid bilayers and their ability to perturb membrane integrity upon binding.", "Deadline": "Round 2", "Decision": "Discuss"}, {"Title": "VDAC2 STABILIZES A MEMBRANE-INSERTED, PRIMED INTERMEDIATE OF BAX ACTIVATION", "Presenter": "Varun RAVISHANKAR", "Sex": "Male", "Presenter Affiliation": "Laboratoire d’Ingénierie des Systèmes Macromoléculaires, LISM, CNRS, UMR7255", "Presenter Country": "France", "Presenter Email": "lbergdoll@imm.cnrs.fr", "Presentation Requested": "Oral", "Employment": "PhD student", "Abstract": "The Bcl-2 associated X protein (BAX) is a major effector of mitochondrial apoptosis implicated in a wide range of cancers. It is activated through a series of conformational transitions that lead to mitochondrial outer membrane permeabilization.", "Deadline": "Round 1", "Decision": "Oral"}, {"Title": "WHAT DRIVES THE POSSIBILITY FOR PFAS TO PERMEATE CELLS: A MD STUDY", "Presenter": "Emmanuelle ORHAN", "Sex": "Female", "Presenter Affiliation": "Pharmacology & Transplantation, UMR INSERM 1248, University of Limoges", "Presenter Country": "France", "Presenter Email": "Emmanuelle.orhan@unilim.fr", "Presentation Requested": "Poster", "Employment": "Unknown", "Abstract": "Per- and polyfluoroalkyl substances (PFAS) constitute a vast family of several thousand chemical compounds. To address this, we employ molecular dynamics simulations aimed at identifying the factors that affect their passive permeation.", "Deadline": "Round 1", "Decision": "Poster"}, {"Title": "WHEN LABELS LIE: UNEXPECTED OPTICAL FEATURES OF FLUORESCENT LIPID PROBES IN ELECTROFORMED MODEL MEMBRANES", "Presenter": "Aharon STEFFÈ", "Sex": "Male", "Presenter Affiliation": "University of Trieste, Department of Life Sciences", "Presenter Country": "Italy", "Presenter Email": "elena.ambrosetti@units.it", "Presentation Requested": "Oral", "Employment": "Post-doc", "Abstract": "Giant Unilamellar Vesicles (GUVs) are versatile biomimetic systems for investigating membrane biophysics, lipid organization, phase separation, and protein interactions in a cell-like environment. Among the available producing approaches, in this study we investigated the electroformation of GUVs using microfabricated interdigitated titanium/gold (Ti/Au) electrodes.", "Deadline": "Round 2", "Decision": "Discuss"}];
+
+const listEl = document.getElementById('cardList');
+const emptyEl = document.getElementById('emptyState');
+const countEl = document.getElementById('resultCount');
+const totalEl = document.getElementById('totalCount');
+const searchInput = document.getElementById('searchInput');
+const filterSex = document.getElementById('filterSex');
+const filterType = document.getElementById('filterType');
+const filterStatus = document.getElementById('filterStatus');
+const filterCountry = document.getElementById('filterCountry');
+const filterDeadline = document.getElementById('filterDeadline');
+const filterDecision = document.getElementById('filterDecision');
+const clearBtn = document.getElementById('clearFilters');
+
+function uniqueSorted(arr){
+  return [...new Set(arr.filter(v => v !== undefined && v !== null && String(v).trim() !== ''))].sort((a,b)=>String(a).localeCompare(String(b)));
+}
+
+function populateSelect(selectEl, values, label){
+  values.forEach(v => {
+    const opt = document.createElement('option');
+    opt.value = v;
+    opt.textContent = v;
+    selectEl.appendChild(opt);
+  });
+}
+
+populateSelect(filterSex, uniqueSorted(ABSTRACTS.map(a => a['Sex'])));
+populateSelect(filterType, uniqueSorted(ABSTRACTS.map(a => a['Presentation Requested'])));
+populateSelect(filterStatus, uniqueSorted(ABSTRACTS.map(a => a['Employment'])));
+populateSelect(filterCountry, uniqueSorted(ABSTRACTS.map(a => a['Presenter Country'])));
+populateSelect(filterDeadline, uniqueSorted(ABSTRACTS.map(a => a['Deadline'])));
+populateSelect(filterDecision, uniqueSorted(ABSTRACTS.map(a => a['Decision'])));
+
+totalEl.textContent = ABSTRACTS.length;
+
+function sexClass(sex){
+  if(!sex) return '';
+  const s = String(sex).toLowerCase();
+  if(s === 'female') return 'female';
+  if(s === 'male') return 'male';
+  return '';
+}
+
+function renderCard(item, index){
+  const card = document.createElement('article');
+  card.className = 'card';
+
+  const head = document.createElement('button');
+  head.className = 'card-head';
+  head.setAttribute('aria-expanded', 'false');
+
+  const affiliationLine = [item['Presenter Affiliation'], item['Presenter Country']].filter(Boolean).join(' · ');
+
+  head.innerHTML = `
+    <span class="toggle-icon" aria-hidden="true">▶</span>
+    <span class="card-main">
+      <span class="card-num">Submission ${index + 1}${item['Deadline'] ? ' · ' + item['Deadline'] : ''}</span>
+      <h2 class="card-title">${item['Title'] || 'Untitled abstract'}</h2>
+      <p class="card-meta"><span class="presenter-name">${item['Presenter'] || 'Unknown presenter'}</span>${affiliationLine ? ' — ' + affiliationLine : ''}</p>
+    </span>
+    <span class="tags">
+      ${item['Sex'] ? `<span class="tag tag-sex ${sexClass(item['Sex'])}">${item['Sex']}</span>` : ''}
+      ${item['Employment'] ? `<span class="tag tag-status">${item['Employment']}</span>` : ''}
+      ${item['Presentation Requested'] ? `<span class="tag tag-type">Requested: ${item['Presentation Requested']}</span>` : ''}
+      ${item['Decision'] ? `<span class="tag tag-decision decision-${item['Decision'].toLowerCase()}">Decision: ${item['Decision']}</span>` : ''}
+    </span>
+  `;
+
+  const abstractWrap = document.createElement('div');
+  abstractWrap.className = 'abstract';
+  abstractWrap.innerHTML = `
+    <div class="abstract-inner">
+      <div class="abstract-body">
+        <p>${item['Abstract'] || 'No abstract text provided.'}</p>
+        <div class="extra-meta">
+          ${item['Presenter Email'] ? `<span>Email: ${item['Presenter Email']}</span>` : ''}
+        </div>
+      </div>
+    </div>
+  `;
+
+  head.addEventListener('click', () => {
+    const isOpen = card.classList.toggle('open');
+    head.setAttribute('aria-expanded', String(isOpen));
+  });
+
+  card.appendChild(head);
+  card.appendChild(abstractWrap);
+  return card;
+}
+
+function applyFilters(){
+  listEl.innerHTML = '';
+  const active = filterConfigs.filter(f => f.get());
+  const filtered = ABSTRACTS.filter(item => matchesAll(item, null));
+
+  if(filtered.length === 0){
+    emptyEl.style.display = 'block';
+  } else {
+    emptyEl.style.display = 'none';
+    filtered.forEach(item => listEl.appendChild(renderCard(item, ABSTRACTS.indexOf(item))));
+  }
+
+  // Denominator: how many abstracts matched just before the most recently
+  // changed filter was applied — i.e. matching every *other* active filter.
+  // This is what lets "male" + "discuss" read as "21 of 38" (38 = discuss
+  // alone) rather than "21 of 105" (the whole dataset).
+  let denominator;
+  if(lastChangedKey && active.some(f => f.key === lastChangedKey)){
+    denominator = ABSTRACTS.filter(item => matchesAll(item, lastChangedKey)).length;
+  } else if(active.length === 0){
+    denominator = ABSTRACTS.length;
+  } else {
+    denominator = ABSTRACTS.filter(item => matchesAll(item, null)).length;
+  }
+
+  countEl.textContent = `${filtered.length} of ${denominator} abstracts`;
+}
+
+function matchesAll(item, excludeKey){
+  return filterConfigs.every(f => {
+    if(f.key === excludeKey) return true;
+    const val = f.get();
+    if(!val) return true;
+    return f.test(item, val);
+  });
+}
+
+let lastChangedKey = null;
+
+const filterConfigs = [
+  { key:'search', get:() => searchInput.value.trim().toLowerCase(),
+    test:(item, q) => [item['Title'], item['Presenter'], item['Presenter Affiliation'], item['Abstract']]
+      .filter(Boolean).join(' ').toLowerCase().includes(q) },
+  { key:'sex', get:() => filterSex.value, test:(item,v) => item['Sex'] === v },
+  { key:'type', get:() => filterType.value, test:(item,v) => item['Presentation Requested'] === v },
+  { key:'employment', get:() => filterStatus.value, test:(item,v) => item['Employment'] === v },
+  { key:'country', get:() => filterCountry.value, test:(item,v) => item['Presenter Country'] === v },
+  { key:'deadline', get:() => filterDeadline.value, test:(item,v) => item['Deadline'] === v },
+  { key:'decision', get:() => filterDecision.value, test:(item,v) => item['Decision'] === v },
+];
+
+[
+  [searchInput, 'search'], [filterSex, 'sex'], [filterType, 'type'],
+  [filterStatus, 'employment'], [filterCountry, 'country'],
+  [filterDeadline, 'deadline'], [filterDecision, 'decision']
+].forEach(([el, key]) => {
+  el.addEventListener('input', () => { lastChangedKey = key; applyFilters(); });
+  el.addEventListener('change', () => { lastChangedKey = key; applyFilters(); });
+});
+
+clearBtn.addEventListener('click', () => {
+  searchInput.value = '';
+  filterSex.value = '';
+  filterType.value = '';
+  filterStatus.value = '';
+  filterCountry.value = '';
+  filterDeadline.value = '';
+  filterDecision.value = '';
+  lastChangedKey = null;
+  applyFilters();
+});
+
+applyFilters();
+</script>
+
+</body>
+</html>
